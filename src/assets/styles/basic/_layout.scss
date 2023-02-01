@@ -1,0 +1,36 @@
+.main-layout {
+    display: grid;
+    grid-template-columns: $layout-padding 1fr $layout-padding;
+
+    > * {
+        grid-column: 2;
+    }
+
+    .full {
+        grid-column: 1 / -1;
+    }
+
+    // @include for-small-layout {
+    //     grid-template-columns: 200px 600px minmax(50px, 1fr);
+    // }
+
+    // @include for-medium-layout {
+    //     grid-template-columns: 200px 800px minmax(50px, 1fr);
+    // }
+
+    // @include for-narrow-layout {
+    //     grid-template-columns: 200px 980px minmax(50px, 1fr);
+    // }
+
+    // @include for-normal-layout {
+    //     grid-template-columns: 200px 1380px minmax(50px, 1fr);
+    // }
+
+    // @include for-wide-layout {
+    //     grid-template-columns: 200px 1600px minmax(50px, 1fr);
+    // }
+
+    // @include for-ultra-wide-layout {
+    //     grid-template-columns: 200px 1800px minmax(50px, 1fr);
+    // }
+}

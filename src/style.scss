@@ -1,0 +1,23 @@
+// SETUP
+@import './assets/styles/setup/typography';
+@import './assets/styles/setup/functions';
+@import './assets/styles/setup/mixins';
+@import './assets/styles/setup/variables';
+
+// BASE
+@import './assets/styles/basic/base';
+@import './assets/styles/basic/helpers';
+@import './assets/styles/basic/layout';
+
+// VIEWS
+@import './views/lead-app/lead-app.scss';
+
+// COMPONENTS
+@import './components/app-header/app-header.scss';
+@import './components/sub-header/sub-header.scss';
+@import './components/funnel-board/funnel-board.scss';
+@import './components/funnel-column/funnel-column.scss';
+@import './components/lead-filter/lead-filter.scss';
+@import './components/lead-list/lead-list.scss';
+@import './components/lead-preview/lead-preview.scss';
+@import './components/table-fields-modal/table-fields-modal.scss';

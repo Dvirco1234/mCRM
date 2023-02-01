@@ -1,0 +1,29 @@
+.app-header {
+    background-color: lightpink;
+    margin-block-end: rem(20px);
+    flex-basis: em(50px);
+
+    &__inner {
+        padding: em(10px) 0;
+    }
+
+    .side-nav {
+        color: white;
+        position: fixed;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background-color: blue;
+        padding: em(10px);
+
+        h2 {
+            margin-block-end: em(20px);
+        }
+
+        li {
+            border: 1px solid white;
+            padding: em(5px);
+            width: 150px;
+        }
+    }
+}

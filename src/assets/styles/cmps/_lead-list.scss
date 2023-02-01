@@ -1,0 +1,10 @@
+.lead-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: em(10px);
+    max-width: max-content;
+    direction: rtl;
+    border: 2px solid gray;
+    padding: em(10px);
+}

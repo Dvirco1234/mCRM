@@ -1,0 +1,29 @@
+.modal {
+    // background-color: #37c998; // green active
+    height: calc(100vh - 300px);
+    width: 300px;
+    top: 110%;
+    left: 20px;
+    border-radius: 3px;
+    background-color: rgb(255, 255, 255);
+    z-index: 10;
+    box-shadow: rgb(0 0 0 / 5%) 0px 4px 6px 0px, rgb(0 0 0 / 5%) 0px 4px 3px 0px;
+    border: 1px solid rgb(243, 243, 243);
+    overflow-y: auto;
+
+    .field {
+        font-size: em(14px);
+        padding: 9px 8px;
+        color: rgb(35, 31, 32);
+        fill: $txt-light-darker;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f7f7f7;
+        }
+
+        .field-txt {
+            margin-inline-start: 15px;
+        }
+    }
+}

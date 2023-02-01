@@ -1,0 +1,62 @@
+// COLORS
+// $primary-color: #e0943d;
+$primary-color: #be123c;
+$primary-color-dark: darken(#be123c, 8%);
+$primary-color-light: lighten(#be123c, 15%);
+
+$secondary-color: #375aad;
+$secondary-color-dark: darken(#375aad, 8%);
+$secondary-color-light: lighten(#375aad, 10%);
+
+$dark-color: #000000;
+$dark-color1: #212529;
+$dark-color2: #333;
+$dark-color3: #343a40;
+$dark-color4: #525252;
+$dark-color5: #495057;
+$dark-color7: #9a9a9a;
+
+$light-color: #ffffff;
+$light-color1: #f8f9fa;
+$light-color2: #f1f3f5;
+$light-color3: #e9ecef;
+$light-color4: #eeeeee;
+$light-color5: #adb5bd;
+
+// LAYOUT
+$layout-padding: 20px;
+$layoutBetaa: 146px;
+
+// LAYOUT BREAKPOINTS
+$break-mobile: 580px;
+$break-small: 620px;
+$break-medium: 860px;
+$break-narrow: 1024px;
+$break-normal: 1440px;
+$break-wide: 1680px;
+$break-ultra-wide: 1980px;
+
+$padded-break-narrow: $break-narrow + $layout-padding * 2;
+$padded-break-normal: $break-normal + $layout-padding * 2;
+$padded-break-wide: $break-wide + $layout-padding * 2;
+
+// Colors
+$primary: #ebb811; //primary
+$secondary: #0d2c54;
+$txt-dark: #444444; //text
+$txt-dark-darker: #231f20; //text
+$bg-dark: #333333; //bg
+$txt-light: #cccccc; //txt - clr3
+$txt-light-darker: #a6a8ab; 
+$txt-middle: #a6a8ab; 
+$bg-light: #fff; //bg
+$bg-light-darken: rgb(249, 249, 249);
+$border-light: #e6e7e8;
+
+$txt-light-darker1: #808184;
+
+$opt1: #258ea6;
+$opt2: #e2b1b1;
+$opt3: #8783d1;
+$opt4: #549f93;
+$opt5: #3d3b8e;

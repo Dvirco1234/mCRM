@@ -1,0 +1,141 @@
+// Flex
+.flex {
+    display: flex;
+
+    &.flex-column {
+        flex-direction: column;
+    }
+    &.inline-flex {
+        display: inline-flex;
+    }
+    &.align-center {
+        align-items: center;
+    }
+    &.align-end {
+        align-items: flex-end;
+    }
+    &.align-start {
+        align-items: flex-start;
+    }
+    &.justify-center {
+        justify-content: center;
+    }
+    &.justify-end {
+        justify-content: flex-end;
+    }
+    &.space-between {
+        justify-content: space-between;
+    }
+    &.row-reverse{
+        flex-direction: row-reverse;
+    }
+    &.gap {
+        &-2 {
+            gap: 2px;
+        }
+        &-4 {
+            gap: 4px;
+        }
+        &-6 {
+            gap: 6px;
+        }
+        &-8 {
+            gap: 8px;
+        }
+        &-10 {
+            gap: 10px;
+        }
+    }
+}
+.align-self-center {
+    align-self: center;
+}
+.self-end {
+    align-self: flex-end;
+}
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// List
+.clean-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+// Text
+.vertical-text {
+    writing-mode: tb-rl;
+    transform: rotate(-180deg);
+}
+
+// Aspect ratios
+
+.ratio-16-9 {
+    @include aspect-ratio(100, 56);
+}
+
+.ratio-square {
+    @include aspect-ratio(100, 100);
+}
+
+.ratio-card {
+    @include aspect-ratio(100, 80);
+}
+
+.ratio-poster {
+    @include aspect-ratio(100, 150);
+}
+
+.grid {
+    display: grid;
+}
+
+.btn {
+    font-family: Arimo, sans-serif;
+    border: none;
+    line-height: 1.4;
+    padding: 0 10px;
+    background-color: transparent;
+    border-radius: 5px;
+    color: $txt-light-darker1;
+    cursor: pointer;
+    
+    &:hover {
+        color: white;
+        background-color: $txt-light-darker;
+
+        .svg-btn {
+            fill: white;
+        }
+    }
+
+    &.active {
+        background-color: rgb(102, 103, 107);
+    }
+
+    .svg-btn {
+        fill: $txt-light-darker1;
+    }
+}
+
+.seperator {
+    box-shadow: 0 1px 0 $border-light;
+    width: 100%;
+    height: 10px;
+    margin-bottom: 11px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.position {
+    &-absolute {position: absolute;}
+    &-relative {position: relative;}
+    &-sticky {position: sticky;}
+    &-fixed {position: fixed;}
+}
