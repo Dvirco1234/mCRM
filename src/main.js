@@ -14,6 +14,9 @@ app.config.globalProperties.$filters = {
     formatTime(value) {
         return formatTime(value)
     },
+    firstLetter(txt) {
+        return txt.charAt(0).toUpperCase()
+    },
 }
 app.directive('click-outside', clickOutsideDirective)
 app.directive('resize', columnsResizableDirective)

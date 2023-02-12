@@ -25,6 +25,7 @@ export default {
     },
     created() { 
         this.$store.commit({ type: 'getTableFields' })
+        this.$store.commit({ type: 'getLeadCardSections' })
     },
     methods: {},
     computed: {

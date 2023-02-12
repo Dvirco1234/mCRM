@@ -13,10 +13,6 @@
             </div>
         </section>
         <section class="filter-sort flex row-reverse">
-            <!-- <h3>New</h3>
-            <h3>Filter</h3>
-            <h3>Columns</h3>
-            <h3>Sort</h3> -->
             <div class="btn">
                 <span>חדש</span>
             </div>
@@ -25,12 +21,12 @@
                 <span>פילטר</span>
             </div>
             <div class="btn flex gap-4" @click="toggleModal('columns')">
-                <svgIcon iconType="columns" class="svg-btn" />
+                <svgIcon :iconType=" $route.name === 'board' ? 'columns2' : 'columns'" class="svg-btn" />
                 <span>עמודות</span>
             </div>
             <div class="btn flex">
                 <svgIcon iconType="sort" class="svg-btn" />
-                <span>סינון</span>
+                <span>מיון</span>
             </div>
         </section>
         <table-fields-modal :tableFields="tableFields" @toggleTableFields="toggleTableFields" v-if="modalTypes.columns"
@@ -67,6 +63,8 @@ export default {
             viewOpts: [
                 { path: '/lead/list', txt: 'רשימה' },
                 { path: '/lead/board', txt: 'לוח' },
+                { path: '/lead/card', txt: 'כרטיס' },
+                // { path: '/lead/card/aaa', txt: 'כרטיס' },
             ],
             modalTypes: {
                 filter: false,
@@ -101,6 +99,9 @@ export default {
         },
         isMenuOpen() {
             return this.$store.getters.isMenuOpen
+        },
+        currLead() { 
+            return this.$store.getters.getCurrLead
         },
         // activeTableFields() {
         //     return this.tableFields.filter(field => field.isActive)

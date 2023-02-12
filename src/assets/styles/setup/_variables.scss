@@ -25,6 +25,7 @@ $light-color5: #adb5bd;
 
 // LAYOUT
 $layout-padding: 20px;
+$card-padding: 15px;
 $layoutBetaa: 146px;
 
 // LAYOUT BREAKPOINTS
@@ -41,8 +42,10 @@ $padded-break-normal: $break-normal + $layout-padding * 2;
 $padded-break-wide: $break-wide + $layout-padding * 2;
 
 // Colors
+
 $primary: #ebb811; //primary
-$secondary: #0d2c54;
+$secondary: #0081C9;
+// $secondary: #0d2c54;
 $txt-dark: #444444; //text
 $txt-dark-darker: #231f20; //text
 $bg-dark: #333333; //bg
@@ -54,6 +57,13 @@ $bg-light-darken: rgb(249, 249, 249);
 $border-light: #e6e7e8;
 
 $txt-light-darker1: #808184;
+
+
+
+$happy: #0081C9;
+$happy1: #5BC0F8;
+$happy2: #86E5FF;
+$happy3: #FFC93C;
 
 $opt1: #258ea6;
 $opt2: #e2b1b1;

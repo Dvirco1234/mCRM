@@ -1,7 +1,26 @@
 .lead-filter {
     min-width: 295px;
     width: 295px;
-    padding-inline-start: $layout-padding;
+    max-height: 87%;
+    // padding-inline-start: $layout-padding;
     // border-inline-end: 1px solid rgb(228, 228, 228);
-    box-shadow: inset 1px 0 0 $border-light;
+    border-inline-end: 1px solid $border-light;
+    // box-shadow: inset 1px 0 0 $border-light;
+    overflow-y: auto;
+
+    // .views-list {
+
+    //     .view {
+    //         // padding: 10px $layout-padding + 16px 10px 16px;
+    //         padding: 10px 16px;
+    //         padding-inline-start: $layout-padding + 16px;
+    //         box-shadow: inset 0 -1px 0 #e6e6e6;
+            
+    //         .sub-view {
+    //             padding: 10px 16px;
+    //             padding-inline-start: 16px;
+
+    //         }
+    //     }
+    // }
 }

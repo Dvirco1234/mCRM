@@ -1,11 +1,45 @@
 .lead-preview {
     border: 1px solid $border-light;
     background-color: white;
-    padding: em(5px);
+    // padding: em(5px);
+    // padding-inline-start: 10px;
+    padding: 15px 15px 8px 12px;
     display: flex;
     align-items: center;
     cursor: grab;
     direction: rtl;
+
+    .name {
+        grid-column: 1/-1;
+        font-weight: 400;
+        font-size: em(17px);
+
+        span {
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .details {
+        font-size: em(14px);
+        color: rgb(128, 129, 132);
+        font-weight: 400;
+
+    }
+    
+    .content {
+        cursor: pointer;
+        font-size: em(15px);
+        line-height: 1.5;
+        &:hover {
+            text-decoration: underline;
+        }
+        &.phone {
+            color: $secondary;
+        }
+    }
 
     img {
         width: em(35px);
@@ -13,10 +47,15 @@
     }
 
     div {
-        display: flex;
-        flex-direction: column;
-        justify-items: center;
-        min-width: max-content;
+        //     display: flex;
+        //     flex-direction: column;
+        //     justify-items: center;
+        //     min-width: max-content;
+        width: 100%;
+        grid-template-columns: max-content 1fr;
+        column-gap: 40px;
+        row-gap: 5px;
+        line-height: 1;
     }
     gap: em(5px);
     margin-block-end: em(5px);

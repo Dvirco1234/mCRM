@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody class="table-body">
-                <tr class="table-row" v-for="lead in leads" :key="lead._id">
+                <tr class="table-row" v-for="lead in leads" :key="lead._id" @click="openLeadCard(lead)">
                     <td class="table-cell " v-for="field in tableFields" :key="field.txt">{{
                         field.key === 'createdAt' ?
                             $filters.formatTime(lead[field.key]) : lead[field.key]
@@ -50,14 +50,19 @@ export default {
     created() {
         // this.leads = this.$store.getters.getLeads
         console.log('new leads', this.leads)
-        this.userPrefs = userService.getUserPrefs()
+        // this.userPrefs = userService.getUserPrefs()
         // this.tableCustomColWidth = this.userPrefs.getTableCustomColWidth
     },
     mounted() {
-        this.setTableColsWidth()
+        this.setUserPrefsTableColsWidth()
         this.arg = this.$refs.tableContainer
+        // console.log('this.$route.name:', this.$route.name)
     },
     methods: {
+        openLeadCard(lead) {
+            this.$store.commit({type: 'setCurrLead', lead})
+            this.$router.push(`/lead/card/${lead._id}`)
+        },
         onTakeLead(leadId) {
             console.log('taking lead...', leadId)
         },
@@ -74,11 +79,18 @@ export default {
         },
         saveCustomTableSize(colIdx, width) {
             const { key } = this.tableFields[colIdx]
-            if(!this.userPrefs?.tableCustomColWidth) this.userPrefs.tableCustomColWidth = {}
-            this.userPrefs.tableCustomColWidth[key] = width
-            userService.saveUserPrefs(this.userPrefs)
+            const prefs = JSON.parse(JSON.stringify(this.userPrefs || {}))
+            let tableCustomColWidth = prefs.tableCustomColWidth || {}
+            tableCustomColWidth[key] = width
+            this.$store.commit({type: 'saveUserPrefs', key: 'tableCustomColWidth', value: tableCustomColWidth})
         },
-        setTableColsWidth() {
+        // saveCustomTableSize(colIdx, width) {
+        //     const { key } = this.tableFields[colIdx]
+        //     if(!this.userPrefs?.tableCustomColWidth) this.userPrefs.tableCustomColWidth = {}
+        //     this.userPrefs.tableCustomColWidth[key] = width
+        //     userService.saveUserPrefs(this.userPrefs)
+        // },
+        setUserPrefsTableColsWidth() {
             if(!this.userPrefs?.tableCustomColWidth) return
             this.$refs.ths.forEach((th, idx) => {
                 const width = this.userPrefs.tableCustomColWidth[this.tableFields[idx].key]
@@ -96,7 +108,10 @@ export default {
         },
         tableFields() {
             return this.$store.getters.getActiveTableFields
-        }
+        },
+        userPrefs() {
+            return this.$store.getters.getUserPrefs
+        },
     },
     components: {
         leadPreview

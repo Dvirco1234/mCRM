@@ -1,5 +1,9 @@
 .lead-list {
     // flex-basis: 45%;
+    // border: 1px solid $border-light;
+    background-color: #fff;
+    box-shadow: 0 0 2px 1px $border-light;
+    min-height: 100%;
     gap: em(10px);
     direction: rtl;
     font-size: 14px;
@@ -47,6 +51,7 @@
                 font-family: Arimo-bold, Arial;
                 &:hover {
                     background-color: #f9f9f9;
+                    box-shadow: inset 0 -1px 0 $border-light;
                 }
                 // &:hover:not(:last-child) {
                 //     box-shadow: inset 4px 0 0 #cacaca;

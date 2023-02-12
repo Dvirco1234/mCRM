@@ -26,7 +26,7 @@
     &.space-between {
         justify-content: space-between;
     }
-    &.row-reverse{
+    &.row-reverse {
         flex-direction: row-reverse;
     }
     &.gap {
@@ -92,6 +92,9 @@
 
 .grid {
     display: grid;
+    &.grid.auto-fit {
+        grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
+    }
 }
 
 .btn {
@@ -103,7 +106,7 @@
     border-radius: 5px;
     color: $txt-light-darker1;
     cursor: pointer;
-    
+
     &:hover {
         color: white;
         background-color: $txt-light-darker;
@@ -134,8 +137,39 @@
 }
 
 .position {
-    &-absolute {position: absolute;}
-    &-relative {position: relative;}
-    &-sticky {position: sticky;}
-    &-fixed {position: fixed;}
+    &-absolute {
+        position: absolute;
+    }
+    &-relative {
+        position: relative;
+    }
+    &-sticky {
+        position: sticky;
+    }
+    &-fixed {
+        position: fixed;
+    }
+}
+
+.clean-btn {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.first-letter {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.h100 {
+    height: 100%;
 }

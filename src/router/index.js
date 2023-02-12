@@ -4,6 +4,7 @@ import homePage from '../views/home-page/home-page.vue'
 import leadApp from '../views/lead-app/lead-app.vue'
 import funnelBoard from '../components/funnel-board/funnel-board.vue'
 import leadList from '../components/lead-list/lead-list.vue'
+import leadCard from '../components/lead-card/lead-card.vue'
 
 const router = createRouter({
     history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,16 @@ const router = createRouter({
                     path: 'board',
                     name: 'board',
                     component: funnelBoard,
+                },
+                // {
+                //     path: 'card',
+                //     name: 'card',
+                //     component: contactCard,
+                // },
+                {
+                    path: 'card/:id?',
+                    name: 'card',
+                    component: leadCard,
                 },
             ],
         },

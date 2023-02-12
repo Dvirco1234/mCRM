@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-// import { userStore } from './modules/user.store'
+import { userStore } from './modules/user.store'
 import { contactStore } from './modules/contact.store'
 import { leadStore } from './modules/lead.store'
 
@@ -23,5 +23,6 @@ export const store = createStore({
     modules: {
         contactStore,
         leadStore,
+        userStore,
     },
 })

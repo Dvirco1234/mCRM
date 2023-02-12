@@ -154,8 +154,8 @@ function saveLocalUser(user) {
 function saveUserPrefs(prefs) {
     const user = getLoggedinUser()
     const KEY = `userPrefs_${user?._id}`
-    const userPref = JSON.parse(localStorage.getItem(KEY))
-    localStorage.setItem(KEY, JSON.stringify({ ...userPref, ...prefs }))
+    const userPrefs = JSON.parse(localStorage.getItem(KEY))
+    localStorage.setItem(KEY, JSON.stringify({ ...userPrefs, ...prefs }))
 }
 
 function getUserPrefs() {

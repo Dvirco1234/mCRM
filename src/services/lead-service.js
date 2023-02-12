@@ -10,7 +10,10 @@ export const leadService = {
     getNewLeads,
     getContacts,
     getTableFields,
-    setTableFields
+    setTableFields,
+    getLeadCardSections,
+    // setUserPrefFields,
+    getCurrFilterViews,
 }
 
 function getLeads() {
@@ -75,11 +78,11 @@ async function getFromMongo() {
         method: 'POST',
         // contentType: 'application/json',
         body: JSON.stringify(payload),
-        headers: { 'api-key': apiKey, 'Content-type': 'application/json'},
+        headers: { 'api-key': apiKey, 'Content-type': 'application/json' },
     }
 
     const res = await fetch(findEndpoint, options)
-    console.log('res: ', res.json());
+    console.log('res: ', res.json())
     // console.log(JSON.parse(res.getContentText()).documents)
     // const documents = JSON.parse(res.getContentText()).documents
 
@@ -138,7 +141,8 @@ function getTableFields() {
         { key: 'status', txt: 'סטטוס', isActive: true },
         { key: 'name', txt: 'שם', isActive: true },
         { key: 'phone', txt: 'טלפון', isActive: true },
-        { key: 'channel', txt: 'צ\'אנל', isActive: true },
+        { key: 'email', txt: 'אימייל', isActive: true },
+        { key: 'channel', txt: "צ'אנל", isActive: true },
         { key: 'createdAt', txt: 'תאריך כניסה', isActive: true },
         { key: 'message', txt: 'הודעה', isActive: true },
         { key: 'contactLog', txt: 'לוג שיחה', isActive: true },
@@ -153,8 +157,112 @@ function getTableFields() {
 function setTableFields(fields) {
     let userPrefs = userService.getUserPrefs()
     if (!userPrefs) userPrefs = {}
-    userPrefs.tableFields = fields//.map(field => field.isActive?)
+    userPrefs.tableFields = fields //.map(field => field.isActive?)
     userService.saveUserPrefs(userPrefs)
+}
+// function setUserPrefFields(fields) {
+//     let userPrefs = userService.getUserPrefs()
+//     if (!userPrefs) userPrefs = {}
+//     userPrefs.tableFields = fields //.map(field => field.isActive?)
+//     userService.saveUserPrefs(userPrefs)
+// }
+
+function getLeadCardSections() {
+    const userPrefs = userService.getUserPrefs()
+    if (userPrefs?.cardSections) return userPrefs.cardSections
+    const cardSections = [
+        {
+            id: 's1',
+            name: 'פרטים כלליים',
+            isOpen: true,
+            fields: [
+                { key: 'status', txt: 'סטטוס', isActive: true, isEditable: false },
+                { key: 'name', txt: 'שם', isActive: true, isEditable: false },
+                { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone', },
+                { key: 'createdAt', txt: 'תאריך כניסה', isActive: true, isEditable: false, type: 'date', isImmutable: true, },
+                { key: 'source', txt: 'מקור', isActive: true, isEditable: false },
+                { key: 'channel', txt: "צ'אנל", isActive: true, isEditable: false },
+            ],
+        },
+        {
+            id: 's2',
+            name: 'פרטי התקשרות',
+            isOpen: true,
+            fields: [
+                { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone', },
+                { key: 'email', txt: 'אימייל', isActive: true, isEditable: false, type: 'email', },
+                { key: 'message', txt: 'הודעה', isActive: true, isEditable: false },
+                { key: 'contactLog', txt: 'לוג שיחה', isActive: true, isEditable: false },
+                { key: 'stopper', txt: 'חסם פוטנציאלי', isActive: true, isEditable: false },
+                { key: 'lastContactBy', txt: 'אמצעי קשר אחרון', isActive: true, isEditable: false },
+                { key: 'lastContactAt', txt: 'תאריך תקשורת אחרון', isActive: true, isEditable: false, type: 'date' },
+                { key: 'nextContactTime', txt: 'זמן התקשרות הבא', isActive: true, isEditable: false, type: 'date' },
+            ],
+        },
+    ]
+    userPrefs.cardSections = cardSections
+    userService.saveUserPrefs(userPrefs)
+    return cardSections
+}
+
+function getCurrFilterViews(view) {
+    let filterViews = {
+        lead: [
+            { key: 'all', txt: 'כל הלידים', isActive: false },
+            {
+                key: 'status',
+                txt: 'סטטוס',
+                isActive: false,
+                options: [
+                    { key: 'new', txt: 'חדשים', isActive: false },
+                    { key: 'beforeIntro', txt: 'לפני ע"פ', isActive: false, details: '' },
+                    {
+                        key: 'intro',
+                        txt: 'ערב פתוח',
+                        isActive: false,
+                        details: { date: '', isConfirmed: true, whatsapp: true, phone: true },
+                    },
+                    { key: 'afterIntro', txt: 'אחרי ע"פ', isActive: false, details: { date: '', didCome: true, gotChallenge: true } },
+                    { key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: false, details: '' },
+                    { key: 'interview', txt: 'ראיון', isActive: false },
+                    { key: 'done', txt: 'נרשם', isActive: false },
+                    { key: 'close', txt: 'סגור', isActive: false, details: '' },
+                ],
+            },
+            {
+                key: 'manager',
+                txt: 'מנהל',
+                isActive: false,
+                options: [],
+                // options: getManagers(),
+            },
+            {
+                key: 'nextContactTime',
+                txt: 'זמן התקשרות הבא',
+                isActive: false,
+                options: [
+                    {
+                        key: 'today',
+                        txt: 'היום',
+                        date: Date.now(),
+                        isActive: false,
+                        options: [
+                            { key: 'morning', txt: 'בוקר', isActive: false },
+                            { key: 'noon', txt: 'צהריים', isActive: false },
+                            { key: 'evening', txt: 'ערב', isActive: false },
+                        ],
+                    },
+                    {
+                        key: 'date',
+                        txt: 'תאריך',
+                        date: ''
+                    },
+                ],
+                type: 'date',
+            },
+        ],
+    }
+    return filterViews[view]
 }
 
 var gContacts = {
@@ -170,13 +278,13 @@ var gContacts = {
                     id: 'c101',
                     img: 'https://robohash.org/puki',
                     name: 'Puki',
-                    phone: '055-278-9984',
+                    phone: '0552789984',
                 },
                 {
                     id: 'c102',
                     img: 'https://robohash.org/shuki',
                     name: 'Shuki',
-                    phone: '055-527-6654',
+                    phone: '055-5276654',
                 },
                 {
                     id: 'c103',
