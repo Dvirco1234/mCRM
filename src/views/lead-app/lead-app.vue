@@ -25,12 +25,16 @@ export default {
     },
     created() { 
         this.$store.commit({ type: 'getTableFields' })
+        this.$store.commit({ type: 'getBoardFields' })
         this.$store.commit({ type: 'getLeadCardSections' })
     },
     methods: {},
     computed: {
         getScene() {
             return this.$store.getters.getContacts
+        },
+        leads() {
+            return this.$store.getters.getLeads
         },
         newLeads() {
             return this.$store.getters.getNewLeads
@@ -39,12 +43,20 @@ export default {
             return this.$store.getters.isMenuOpen
         },
     },
-    unmounted() { },
     components: {
         leadFilter,
         funnelBoard,
         leadList,
         subHeader
+    },
+    watch: {
+        '$route.path': {
+            handler() {
+                const view = this.$route.name
+                this.$store.commit({ type: 'setCurrViewName', view })
+            },
+            immediate: true,
+        }
     }
 }
 </script>

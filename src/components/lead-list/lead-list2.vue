@@ -61,7 +61,7 @@ export default {
     },
     computed: {
         leads() {
-            return this.$store.getters.getNewLeads
+            return this.$store.getters.getLeads
         }
     },
     components: {

@@ -8,7 +8,7 @@
             <div class="curr-view-info flex flex-column">
                 <h3>{{ currView }} <span>({{ leads.length }})</span></h3>
                 <nav class="view-options flex">
-                    <router-link class="option-link" v-for="link in viewOpts" :to="link.path">{{ link.txt }}</router-link>
+                    <router-link class="option-link" v-for="link in viewOpts" :to="link.path" :class="{'router-link-active': $route.name === link.name}">{{ link.txt }}</router-link>
                 </nav>
             </div>
         </section>
@@ -29,8 +29,10 @@
                 <span>מיון</span>
             </div>
         </section>
-        <table-fields-modal :tableFields="tableFields" @toggleTableFields="toggleTableFields" v-if="modalTypes.columns"
+        <table-fields-modal :tableFields="currViewFields" @toggleCurrViewFields="toggleCurrViewFields" v-if="modalTypes.columns"
             v-click-outside:columns="toggleModal" @updateTableFields="updateTableFields"/>
+        <!-- <table-fields-modal :tableFields="currViewFields" @toggleTableFields="toggleTableFields" v-if="modalTypes.columns"
+            v-click-outside:columns="toggleModal" @updateTableFields="updateTableFields"/> -->
         <!-- <section class="modal position-absolute" v-if="modalTypes.columns">
             <ul class="clean-list">
                 <li class="field flex align-center" v-for="field in activeTableFields" :key="field.key" @click="toggleTableFields(field)">
@@ -61,9 +63,9 @@ export default {
             // leads: [1, 2, 3, 4, 5, 6, 7],
             currView: 'לידים חדשים',
             viewOpts: [
-                { path: '/lead/list', txt: 'רשימה' },
-                { path: '/lead/board', txt: 'לוח' },
-                { path: '/lead/card', txt: 'כרטיס' },
+                { path: '/lead/list', txt: 'רשימה', name: 'list' },
+                { path: '/lead/board', txt: 'לוח', name: 'board' },
+                { path: '/lead/card', txt: 'כרטיס', name: 'card' },
                 // { path: '/lead/card/aaa', txt: 'כרטיס' },
             ],
             modalTypes: {
@@ -71,16 +73,16 @@ export default {
                 columns: false,
                 sort: false,
             },
-            tableFields: null,
+            currViewFields: null,
 
         }
     },
-    created() { },
+    created() {console.log('this.$store.getters.getCurrViewFields: ', this.$store.getters.getCurrViewFields); },
     methods: {
         toggleModal(type) {
             this.modalTypes[type] = !this.modalTypes[type]
             if (this.modalTypes[type]) {
-                this.tableFields = JSON.parse(JSON.stringify(this.$store.getters.getTableFields))
+                this.currViewFields = JSON.parse(JSON.stringify(this.$store.getters.getCurrViewFields))
             }
         },
         toggleTableFields(idx, field) {
@@ -88,20 +90,26 @@ export default {
             field.isActive = !field.isActive
             this.updateTableFields()
         },
-        updateTableFields(fields = this.tableFields) {
-            this.tableFields = fields
+        updateTableFields(fields = this.currViewFields) {
+            this.currViewFields = fields
             this.$store.commit({ type: 'setTableFields', fields: JSON.parse(JSON.stringify(fields)) })
+        },
+        toggleCurrViewFields(fieldId) {
+            this.$store.commit({ type: 'toggleCurrViewFields', fieldId })
         },
     },
     computed: {
         leads() {
-            return this.$store.getters.getNewLeads
+            return this.$store.getters.getLeads
         },
         isMenuOpen() {
             return this.$store.getters.isMenuOpen
         },
         currLead() { 
             return this.$store.getters.getCurrLead
+        },
+        currViewFields() { 
+            return this.$store.getters.getCurrViewFields
         },
         // activeTableFields() {
         //     return this.tableFields.filter(field => field.isActive)

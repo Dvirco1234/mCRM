@@ -90,15 +90,22 @@ function prepareResizableTable(table, cb, nodeName = 'TABLE') {
 
         // if (!firstResizeContainer) {
         th.addEventListener('mouseover', () => {
+            if (isMoving) {
+                if(movingIndex !== index) return
+            }
+            // th.style.backgroundColor = '#f9f9f9'
             bar.style.backgroundColor = '#cacaca'
         })
         th.addEventListener('mouseleave', () => {
+            // if (isMoving && movingIndex === index) return
+            // th.style.backgroundColor = ''
             bar.style.backgroundColor = ''
         })
         bar.addEventListener('mouseover', () => {
             ths[index].style.backgroundColor = '#f9f9f9'
         })
         bar.addEventListener('mouseleave', () => {
+            // if (isMoving && movingIndex === index) return
             ths[index].style.backgroundColor = ''
         })
 
@@ -124,6 +131,7 @@ function prepareResizableTable(table, cb, nodeName = 'TABLE') {
         isMoving = false
         document.body.style.cursor = ''
         document.body.style.userSelect = ''
+        // ths[movingIndex].style.backgroundColor = ''
 
         bars.forEach((bar, index) => {
             bar.style.background = 'transparent'

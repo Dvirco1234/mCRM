@@ -1,6 +1,6 @@
 .modal {
     // background-color: #37c998; // green active
-    height: calc(100vh - 300px);
+    max-height: calc(100vh - 300px);
     width: 300px;
     top: 110%;
     left: 20px;

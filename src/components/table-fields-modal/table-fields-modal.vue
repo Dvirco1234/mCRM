@@ -4,21 +4,17 @@
             <Container :get-ghost-parent="getGhostParent" :get-child-payload="getChildPayload" @drop="onDrop" @drop-ready="onDropReady"
                 @drop-not-allowed="dropNotAllowed">
                 <Draggable v-for="(field, idx) in activeTableFields" :key="field.key">
-                    <li class="field flex align-center" @click="$emit('toggleTableFields', idx, field)">
+                    <!-- <li class="field flex align-center" @click="$emit('toggleTableFields', idx, field)"> -->
+                    <li class="field flex align-center" @click="$emit('toggleCurrViewFields', field.id)">
                         <svgIcon iconType="drag20" :isSmall="true" />
                         <toggleBtn :checked="field.isActive" />
                         <span class="field-txt">{{ field.txt }}</span>
                     </li>
                 </Draggable>
             </Container>
-            <!-- <li class="field flex align-center" v-for="(field, idx) in activeTableFields" :key="field.key"
-                @click="$emit('toggleTableFields', idx, field)">
-                <svgIcon iconType="drag20" :isSmall="true" />
-                <toggleBtn :checked="field.isActive" />
-                <span class="field-txt">{{ field.txt }}</span>
-            </li> -->
+            <!-- @click="$emit('toggleCurrViewFields', idx + activeTableFields.length, field.id)"> -->
             <li class="field flex align-center" v-for="field, idx in inactiveTableFields" :key="field.key"
-                @click="$emit('toggleTableFields', idx + activeTableFields.length, field)">
+                @click="$emit('toggleCurrViewFields', field.id)">
                 <svgIcon iconType="drag20" :isSmall="true" />
                 <toggleBtn :checked="field.isActive" />
                 <span class="field-txt">{{ field.txt }}</span>
@@ -42,7 +38,10 @@ export default {
             ]
         }
     },
-    created() { },
+    created() { 
+        console.log('tableFields: ', this.tableFields);
+
+    },
     methods: {
         onDrop(dropResult) {
             // console.log("drop result ", dropResult)

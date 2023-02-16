@@ -22,8 +22,8 @@ export default {
     methods: {
         getCurrFilterViews() {
             const view = this.$route.matched[0].name
-            console.log('this.$route: ', this.$route);
-            console.log('view: ', view);
+            // console.log('this.$route: ', this.$route);
+            // console.log('view: ', view);
             this.$store.commit({type: 'getCurrFilterViews', view})
         },
         setFilterView(view) {

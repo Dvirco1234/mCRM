@@ -14,6 +14,7 @@ export default {
     created() {
         this.$store.dispatch({ type: 'loadContacts' })
         this.$store.dispatch({ type: 'loadNewLeads' })
+        this.$store.dispatch({ type: 'loadLeads' })
         this.$store.commit({ type: 'setUserPrefs' })
     },
 }

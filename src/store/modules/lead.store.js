@@ -6,15 +6,23 @@ export const leadStore = {
         currLead: null,
         newLeads: null,
         tableFields: null,
+        boardFields: null,
+        currViewName: '',
         cardSections: [],
         currFilterViews: [],
     },
     getters: {
+        getLeads({ leads }) {
+            return leads
+        },
         getNewLeads({ newLeads }) {
             return newLeads
         },
-        getTableFields({ tableFields }) {
-            return tableFields
+        // getCurrViewFields({ currViewFields }) {
+        //     return currViewFields
+        // },
+        getCurrViewFields({ tableFields, boardFields, currViewName }) {
+            return (currViewName === 'board') ? boardFields : tableFields
         },
         getActiveTableFields({ tableFields }) {
             return tableFields.filter(field => field.isActive)
@@ -30,11 +38,17 @@ export const leadStore = {
         },
     },
     mutations: {
+        setLeads(state, { leads }) {
+            state.leads = leads
+        },
         setNewLeads(state, { newLeads }) {
             state.newLeads = newLeads
         },
         getTableFields(state) {
             state.tableFields = leadService.getTableFields()
+        },
+        getBoardFields(state) {
+            state.boardFields = leadService.getBoardFields()
         },
         setTableFields(state, { fields }) {
             state.tableFields = fields
@@ -68,8 +82,22 @@ export const leadStore = {
         // getLeadById(state, { id }) {
         //     state.currLead = lead
         // },
+        setCurrViewName(state, { view }) {
+            state.currViewName = view 
+            // state.currViewName = view === 'board' ? state.boardFields : state.tableFields
+        },
+        toggleCurrViewFields(state, { fieldId }) {
+            const key = state.currViewName === 'board' ? 'boardFields' : 'tableFields'
+            const idx = state[key].findIndex(field => field.id === fieldId)
+            state[key][idx].isActive = !state[key][idx].isActive
+            this.commit({ type: 'saveUserPrefs', key, value: state[key] })
+        },
     },
     actions: {
+        async loadLeads({ commit }) {
+            const leads = await leadService.getLeads()
+            commit({ type: 'setLeads', leads })
+        },
         async loadNewLeads({ commit }) {
             const newLeads = await leadService.getNewLeads()
             commit({ type: 'setNewLeads', newLeads })

@@ -1,0 +1,50 @@
+.dp__main {
+    width: 90%;
+
+    & > * {
+        width: 100%;
+    }
+}
+
+.input.date-input {
+    line-height: 2.2
+}
+
+// .dp__input_wrap {
+//     width: 90%;
+// }
+
+.dp-custom-input {
+    // direction: ltr;
+    width: 99% !important;
+    // margin: 1px;
+    padding-inline-start: 40px !important;
+    outline: 1px solid #0081c9;
+    outline-offset: -1px;
+    &.disabled {
+        outline: none !important;
+        padding-inline-start: 0 !important;
+    }
+}
+// .dp__clear_icon {
+//     display: none;
+// }
+// .dp__menu.dp__menu_index {
+//     direction: ltr !important;
+// }
+.dp__month_year_row {
+    direction: ltr;
+}
+.dp__month_year_col_nav {
+    overflow: hidden;
+}
+
+.dp__time_input {
+    direction: ltr;
+}
+
+// .date-input {
+//     cursor: pointer;
+//     outline: none !important;
+//     padding: 0 !important;
+// }

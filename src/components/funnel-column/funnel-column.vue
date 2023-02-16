@@ -12,7 +12,8 @@
 </template>
 
 <script>
-import { Container, Draggable } from "vue-dndrop"
+// const { Container, Draggable } = require('vue-dndrop')
+import { Container, Draggable } from 'vue-dndrop'
 import leadPreview from '../../components/lead-preview/lead-preview.vue'
 
 export default {
@@ -51,7 +52,9 @@ export default {
 
     },
     components: {
-        Container, Draggable, leadPreview
+        Container,
+        Draggable,
+        leadPreview
     },
 }
 </script>

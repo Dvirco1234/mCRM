@@ -15,6 +15,7 @@
     .lead-main {
         width: 100%;
         padding: em(20px);
+        padding-inline-end: 0;
         height: 90%;
         // padding-right: 0;
         background: $bg-light-darken;
