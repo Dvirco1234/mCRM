@@ -1,6 +1,6 @@
 <template>
     <Datepicker v-if="isEditable && !field.isImmutable" v-model="dateToEdit" :start-date="startDate" week-start="0" show-now-button input-class-name="input dp-custom-input"
-        @change="pickDate()" format="dd/MM/yyyy HH:mm" :min-date="minDate" />
+        @change="pickDate()" format="dd/MM/yyyy HH:mm" :min-date="minDate" auto-apply/>
         <!-- @change="pickDate()" :format="format" /> -->
     <!-- <input v-else class="input date-input" readonly :value="$filters.formatTime(date)" /> -->
     <p v-else class="input date-input">{{ $filters.formatTime(date) }}</p>

@@ -22,13 +22,18 @@
         }
     }
 
+    .email {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        // white-space: nowrap;
+    }
+
     .details {
         font-size: em(14px);
         color: rgb(128, 129, 132);
         font-weight: 400;
-
     }
-    
+
     .content {
         cursor: pointer;
         font-size: em(15px);
@@ -46,14 +51,14 @@
         border-radius: 50%;
     }
 
-    div {
+    .preview-content {
         //     display: flex;
         //     flex-direction: column;
         //     justify-items: center;
         //     min-width: max-content;
         width: 100%;
         grid-template-columns: max-content 1fr;
-        column-gap: 40px;
+        column-gap: 20px;
         row-gap: 5px;
         line-height: 1;
     }

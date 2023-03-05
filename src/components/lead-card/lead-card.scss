@@ -12,7 +12,7 @@
         padding: $card-padding;
         margin-bottom: $card-padding;
         font-size: em(18px);
-        z-index: 10;
+        // z-index: 10;
 
         .svg-btn {
             fill: $txt-dark-darker;
@@ -60,6 +60,17 @@
         display: grid;
         gap: 20px;
         padding: $card-padding;
+        align-self: start;
+    }
+    
+    .actions-section {
+        display: flex;
+        width: 100%;
+    }
+
+    .log-card {
+        display: flex;
+        width: 100%;
     }
 
     .lead-details {
@@ -150,4 +161,8 @@
             }
         }
     }
+
+    // .manager-section {
+    //     max-width: 430px;
+    // }
 }

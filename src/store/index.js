@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import { userStore } from './modules/user.store'
+import { userPrefsStore } from './modules/user-prefs.store'
 import { contactStore } from './modules/contact.store'
 import { leadStore } from './modules/lead.store'
 
@@ -24,5 +25,6 @@ export const store = createStore({
         contactStore,
         leadStore,
         userStore,
+        userPrefsStore,
     },
 })

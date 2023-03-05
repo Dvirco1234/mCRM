@@ -91,3 +91,28 @@
     align-items: center;
     direction: rtl;
 }
+
+@mixin search-input {
+    position: relative;
+        input {
+            color: $txt-light-darker;
+            font-size: 0.875em;
+            font-family: Arimo, sans-serif;
+            width: 100%;
+            padding: 10px 44px 10px 12px;
+            &::-webkit-search-cancel-button {
+                -webkit-appearance: none;
+                cursor: pointer;
+               }
+        }
+
+        .icon {
+            position: absolute;
+            top: 50%;
+            translate: 0 -50%;
+            left: 10px;
+            // fill: #808184;
+            fill: $txt-light-darker1;
+            cursor: pointer;
+        }
+}

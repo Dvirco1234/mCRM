@@ -3,6 +3,13 @@
     .view {
         // padding: 10px $layout-padding + 16px 10px 16px;
 
+        &.active {
+            .view-content {
+                background-color: rgba(0, 0, 0, 0.05);
+                color: $primary
+            }
+        }
+
         .view-content {
             cursor: pointer;
             display: block;

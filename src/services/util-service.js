@@ -2,6 +2,9 @@ export const utilService = {
   delay,
   getRandomInt,
   makeId,
+  loadFromStorage,
+  saveToStorage,
+  debounce
 }
 
 function delay(ms = 1500) {
@@ -25,6 +28,27 @@ function makeId(length = 5) {
   return txt
 }
 
+function loadFromStorage(key) {
+  var val = localStorage.getItem(key)
+  return (val)? JSON.parse(val) : null
+}
 
+function saveToStorage(key, val) {
+  localStorage[key] = JSON.stringify(val)
+}
+
+function debounce(func, wait = 500) {
+  let timeout
+
+  return function (...args) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
 
 

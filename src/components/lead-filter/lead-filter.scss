@@ -8,6 +8,10 @@
     // box-shadow: inset 1px 0 0 $border-light;
     overflow-y: auto;
 
+    .search {
+        @include search-input;
+    }
+
     // .views-list {
 
     //     .view {

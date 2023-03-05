@@ -21,18 +21,18 @@ export const contactStore = {
             console.log('contacts', scene)
             commit({ type: 'setContacts', scene })
         },
-        onCardDrop({ commit, getters }, { columnId, dropResult }) {
-            if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+        // onCardDrop({ commit, getters }, { columnId, dropResult }) {
+        //     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
 
-                const scene = JSON.parse(JSON.stringify(getters.getContacts))
-                const column = scene.stages.find((p) => p.id === columnId)
-                const columnIndex = scene.stages.indexOf(column)
+        //         const scene = JSON.parse(JSON.stringify(getters.getContacts))
+        //         const column = scene.stages.find((p) => p.id === columnId)
+        //         const columnIndex = scene.stages.indexOf(column)
 
-                column.children = dndService.applyDrag(column.children, dropResult)
-                scene.stages.splice(columnIndex, 1, column)
+        //         column.children = dndService.applyDrag(column.children, dropResult)
+        //         scene.stages.splice(columnIndex, 1, column)
 
-                commit({ type: 'setContacts', scene })
-            }
-        },
+        //         commit({ type: 'setContacts', scene })
+        //     }
+        // },
     }
 }

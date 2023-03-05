@@ -1,0 +1,31 @@
+.lead-board {
+    flex-grow: 1;
+    display: flex;
+    gap: rem(10px);
+    overflow-x: auto;
+    .column-header {
+        direction: rtl;
+        margin-block-end: em(5px);
+    }
+
+    .funnel-column {
+        padding: em(10px);
+        flex-grow: 1;
+        min-width: 270px;
+        margin-bottom: 10px;
+    
+        .column-main {
+            max-height: 93%;
+            overflow-y: auto;
+        }
+    
+        .dndrop-draggable-wrapper {
+            margin-inline-end: 4px;
+        }
+    }
+}
+
+.dndrop-container.vertical.column-main {
+    min-height: 224px;
+    padding-bottom: 80px;
+}

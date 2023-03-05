@@ -46,8 +46,9 @@ export default {
         onDrop(dropResult) {
             // console.log("drop result ", dropResult)
             const activeTableFields = dndService.applyDrag(this.activeTableFields, dropResult)
+            console.log('activeTableFields: ', activeTableFields);
             const fields = [...activeTableFields, ...this.inactiveTableFields]
-            this.$emit('updateTableFields', fields)
+            this.$emit('updateCurrViewFields', fields)
         },
         getGhostParent() {
             return document.body

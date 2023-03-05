@@ -1,15 +1,13 @@
 import { leadService } from '../../services/lead-service.js'
+import { dndService } from '../../services/dnd-service.js'
 
 export const leadStore = {
     state: {
         leads: null,
         currLead: null,
         newLeads: null,
-        tableFields: null,
-        boardFields: null,
-        currViewName: '',
-        cardSections: [],
-        currFilterViews: [],
+        boardScene: null,
+        filterBy: null,
     },
     getters: {
         getLeads({ leads }) {
@@ -18,24 +16,34 @@ export const leadStore = {
         getNewLeads({ newLeads }) {
             return newLeads
         },
-        // getCurrViewFields({ currViewFields }) {
-        //     return currViewFields
-        // },
-        getCurrViewFields({ tableFields, boardFields, currViewName }) {
-            return (currViewName === 'board') ? boardFields : tableFields
-        },
-        getActiveTableFields({ tableFields }) {
-            return tableFields.filter(field => field.isActive)
-        },
-        getLeadCardSections({ cardSections }) {
-            return cardSections
-        },
         getCurrLead({ currLead }) {
             return currLead
         },
-        getCurrFilterViews({ currFilterViews }) {
-            return currFilterViews
+        getCurrFilterBy({ filterBy }) {
+            return filterBy
         },
+        getBoardScene({ leads }, { getActiveBoardFields }) {
+            console.log('getActiveBoardFields: ', getActiveBoardFields)
+            const idxMap = getActiveBoardFields.reduce((acc, field, idx) => ({ ...acc, [field.key]: idx }), {})
+            console.log('idxMap: ', idxMap)
+            let scene = JSON.parse(JSON.stringify(getActiveBoardFields))
+            leads.map(lead => {
+                const stageIdx = idxMap[lead.status]
+                if (!scene[stageIdx].children) scene[stageIdx].children = []
+                scene[stageIdx].children.push(lead)
+            })
+            console.log('scene: ', scene)
+            return scene
+        },
+        // getBoardScene({ leads }, {getActiveBoardFields}) {
+        //     const scene = getActiveBoardFields.map(stage => {
+        //         const currStage = { ...stage }
+        //         currStage.children = leads.filter(lead => lead.status === stage.key)
+        //         return currStage
+        //     })
+        //     console.log('scene: ', scene)
+        //     return scene
+        // },
     },
     mutations: {
         setLeads(state, { leads }) {
@@ -44,63 +52,72 @@ export const leadStore = {
         setNewLeads(state, { newLeads }) {
             state.newLeads = newLeads
         },
-        getTableFields(state) {
-            state.tableFields = leadService.getTableFields()
-        },
-        getBoardFields(state) {
-            state.boardFields = leadService.getBoardFields()
-        },
-        setTableFields(state, { fields }) {
-            state.tableFields = fields
-            this.commit({ type: 'saveUserPrefs', key: 'tableFields', value: fields })
-            // leadService.setTableFields(fields)
-        },
         setCurrLead(state, { lead }) {
             state.currLead = lead
         },
-        getLeadCardSections(state) {
-            state.cardSections = leadService.getLeadCardSections()
+        setFilter(state, { filterBy, isSingleFilter = false }) {
+            if (!state.filterBy || isSingleFilter) state.filterBy = {}
+            state.filterBy = { ...state.filterBy, ...filterBy }
+            if (state.filterBy?.all) state.filterBy = null
         },
-        toggleSectionOpen(state, { sectionId }) {
-            const idx = state.cardSections.findIndex(s => s.id === sectionId)
-            state.cardSections[idx].isOpen = !state.cardSections[idx].isOpen
-            this.commit({
-                type: 'saveUserPrefs',
-                key: 'cardSections',
-                value: JSON.parse(JSON.stringify(state.cardSections))
-            })
-        },
-        toggleInputEditable(state, { sectionId, fieldIdx }) {
-            console.log('fieldIdx: ', fieldIdx);
-            const idx = state.cardSections.findIndex(s => s.id === sectionId)
-            state.cardSections[idx].fields[fieldIdx].isEditable = !state.cardSections[idx].fields[fieldIdx].isEditable
-        },
-        getCurrFilterViews(state, { view }) {
-            const filterViews = leadService.getCurrFilterViews(view)
-            state.currFilterViews = filterViews
-        },
-        // getLeadById(state, { id }) {
-        //     state.currLead = lead
+        // setBoardScene(state, { leads }) {
+        //     state.boardScene = getActiveBoardFields.map(stage => {
+        //         const currStage = { ...stage }
+        //         currStage.children = state.leads.filter(lead => lead.status === stage.key)
+        //         return currStage
+        //     })
         // },
-        setCurrViewName(state, { view }) {
-            state.currViewName = view 
-            // state.currViewName = view === 'board' ? state.boardFields : state.tableFields
-        },
-        toggleCurrViewFields(state, { fieldId }) {
-            const key = state.currViewName === 'board' ? 'boardFields' : 'tableFields'
-            const idx = state[key].findIndex(field => field.id === fieldId)
-            state[key][idx].isActive = !state[key][idx].isActive
-            this.commit({ type: 'saveUserPrefs', key, value: state[key] })
+        updateLeads(state, { leads }) {
+            state.leads = leads
         },
     },
     actions: {
-        async loadLeads({ commit }) {
-            const leads = await leadService.getLeads()
+        async loadLeads({ commit, state: { filterBy } }) {
+            const leads = await leadService.getLeads(filterBy)
             commit({ type: 'setLeads', leads })
         },
-        async loadNewLeads({ commit }) {
-            const newLeads = await leadService.getNewLeads()
-            commit({ type: 'setNewLeads', newLeads })
+        async loadNewLeads(store) {
+            // console.log('store: ', store);
+            // const newLeads = await leadService.getNewLeads()
+            // commit({ type: 'setNewLeads', newLeads })
         },
+        async setFilter({ commit, dispatch }, { filterBy, isSingleFilter }) {
+            if (isSingleFilter) commit({ type: 'setActiveFilter', filterBy })
+            commit({ type: 'setFilter', filterBy, isSingleFilter })
+            dispatch({ type: 'loadLeads' })
+            // const leads = leadService.loadLeads(filterBy)
+        },
+        onLeadCardDrop({ commit, getters }, { columnId, dropResult }) {
+            console.log('dropResult: ', dropResult)
+            // console.log('dropResult: ', dropResult.payload)
+            if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+                const scene = JSON.parse(JSON.stringify(getters.getBoardScene))
+                const column = scene.find(col => col.id === columnId)
+                const columnIndex = scene.indexOf(column)
+
+                column.children = dndService.applyDrag(column.children, dropResult)
+                scene.splice(columnIndex, 1, column)
+
+                // commit({ type: 'updateLeadOn', leads })
+            }
+        },
+        // onLeadCardDrop({ commit, getters }, { columnId, dropResult }) {
+        //     console.log('dropResult: ', dropResult.payload);
+        //     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+
+        //         const scene = JSON.parse(JSON.stringify(getters.getBoardScene))
+        //         const column = scene.find(col => col.id === columnId)
+        //         const columnIndex = scene.indexOf(column)
+
+        //         column.children = dndService.applyDrag(column.children, dropResult)
+        //         scene.splice(columnIndex, 1, column)
+
+        //         commit({ type: 'updateLeadOn', leads })
+        //     }
+        // },
+        // async setFilter({ commit, state }, { filterBy }) {
+        //     const leads = leadService.loadLeads(filterBy)
+        //     commit({ type: 'setToys', toys })
+        // },
     },
 }

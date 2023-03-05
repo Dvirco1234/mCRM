@@ -5,7 +5,7 @@
                 <img class="logo-img"
                     src="https://res.cloudinary.com/dvirco123/image/upload/v1673431899/MisterBit%20CRM/logo-misterbit_xfwtq8.png"
                     alt="MisterBit CRM" @click="$router.push('/')">
-                <h2 class="fs28">CRM</h2>
+                <!-- <h2 class="fs28">CRM</h2> -->
             </div>
 
             <ul class="nav-links flex space-between clean-list ">
@@ -24,9 +24,9 @@ export default {
     data() {
         return {
             routes: [
-                { path: '/', txt: 'Home' },
-                { path: '/lead', txt: 'Leads' },
-                { path: '/contact', txt: 'Contacts' },
+                { path: '/', txt: 'בית' },
+                { path: '/lead', txt: 'לידים' },
+                { path: '/scrum', txt: 'SCRUM' },
             ]
         }
     },

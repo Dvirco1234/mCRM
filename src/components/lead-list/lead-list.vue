@@ -1,23 +1,29 @@
 <template>
     <section ref="tableContainer" class="lead-list table-container">
         <table ref="table" class="table">
-            <thead v-resize:[arg]="saveCustomTableSize" class="table-header">
+            <thead v-resize="saveCustomTableSize" class="table-header">
                 <tr class="table-row head-cell cursor-pointer">
                     <th ref="ths" class="table-cell head-cell" v-for="field in tableFields" :key="field.key">
                         {{ field.txt }}
                     </th>
                     <!-- <th class="table-cell head-cell" v-for="leadKey in leadKeys" :key="leadKey.key"
-                        :style="{ width: userPrefs?.tableCustomColWidth[leadKey.key] || '' + 'px' }">
-                        {{ leadKey.txt }}
-                    </th> -->
+                            :style="{ width: userPrefs?.tableCustomColWidth[leadKey.key] || '' + 'px' }">
+                            {{ leadKey.txt }}
+                        </th> -->
                 </tr>
             </thead>
             <tbody class="table-body">
                 <tr class="table-row" v-for="lead in leads" :key="lead._id" @click="openLeadCard(lead)">
-                    <td class="table-cell " v-for="field in tableFields" :key="field.txt">{{
-                        field.key === 'createdAt' ?
-                            $filters.formatTime(lead[field.key]) : lead[field.key]
-                    }}</td>
+                    <td class="table-cell " v-for="field in tableFields" :key="field.txt">
+                        <!-- <span v-if="field.key === 'createdAt'">{{ $filters.formatTime(lead[field.key]) }}</span> -->
+                        <span v-if="field.isDate">{{ $filters.formatTime(lead[field.key], (field.key === 'nextContactDate')) }}</span>
+                        <span v-else-if="field.key === 'status'">{{ statusTxtMap[lead[field.key]] }}</span>
+                        <span v-else>{{ lead[field.key] }}</span>
+                    </td>
+                    <!-- <td class="table-cell " v-for="field in tableFields" :key="field.txt">{{
+                            field.key === 'createdAt' ?
+                                $filters.formatTime(lead[field.key]) : lead[field.key]
+                        }}</td> -->
                 </tr>
             </tbody>
         </table>
@@ -29,10 +35,10 @@ import leadPreview from '../lead-preview/lead-preview.vue'
 import { userService } from '../../services/user.service.js'
 
 export default {
-    name: '',
-    props: {
-        leads: Array,
-    },
+    name: 'lead-list',
+    // props: {
+    //     leads: Array,
+    // },
     data() {
         return {
             // leadsKeys: ['status', 'name', 'phone', 'source', 'createdAt',]
@@ -44,23 +50,23 @@ export default {
             //     { key: 'createdAt', txt: 'תאריך כניסה' },
             //     { key: 'message', txt: 'הודעה' },
             // ]
-            arg: null,
+            // arg: null,
         }
     },
     created() {
         // this.leads = this.$store.getters.getLeads
-        console.log('new leads', this.leads)
+        // console.log('new leads', this.leads)
         // this.userPrefs = userService.getUserPrefs()
         // this.tableCustomColWidth = this.userPrefs.getTableCustomColWidth
     },
     mounted() {
         this.setUserPrefsTableColsWidth()
-        this.arg = this.$refs.tableContainer
+        // this.arg = this.$refs.tableContainer
         // console.log('this.$route.name:', this.$route.name)
     },
     methods: {
         openLeadCard(lead) {
-            this.$store.commit({type: 'setCurrLead', lead})
+            this.$store.commit({ type: 'setCurrLead', lead })
             this.$router.push(`/lead/card/${lead._id}`)
         },
         onTakeLead(leadId) {
@@ -82,7 +88,7 @@ export default {
             const prefs = JSON.parse(JSON.stringify(this.userPrefs || {}))
             let tableCustomColWidth = prefs.tableCustomColWidth || {}
             tableCustomColWidth[key] = width
-            this.$store.commit({type: 'saveUserPrefs', key: 'tableCustomColWidth', value: tableCustomColWidth})
+            this.$store.commit({ type: 'saveUserPrefs', key: 'tableCustomColWidth', value: tableCustomColWidth })
         },
         // saveCustomTableSize(colIdx, width) {
         //     const { key } = this.tableFields[colIdx]
@@ -91,7 +97,7 @@ export default {
         //     userService.saveUserPrefs(this.userPrefs)
         // },
         setUserPrefsTableColsWidth() {
-            if(!this.userPrefs?.tableCustomColWidth) return
+            if (!this.userPrefs?.tableCustomColWidth) return
             this.$refs.ths.forEach((th, idx) => {
                 const width = this.userPrefs.tableCustomColWidth[this.tableFields[idx].key]
                 if (width) {
@@ -112,6 +118,9 @@ export default {
         userPrefs() {
             return this.$store.getters.getUserPrefs
         },
+        statusTxtMap() {
+            return this.$store.getters.getStatusTxtMap
+        }
     },
     components: {
         leadPreview

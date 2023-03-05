@@ -2,7 +2,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 import homePage from '../views/home-page/home-page.vue'
 import leadApp from '../views/lead-app/lead-app.vue'
-import funnelBoard from '../components/funnel-board/funnel-board.vue'
+// import funnelBoard from '../components/funnel-board/funnel-board.vue'
+import leadBoard from '../components/lead-board/lead-board.vue'
 import leadList from '../components/lead-list/lead-list.vue'
 import leadCard from '../components/lead-card/lead-card.vue'
 
@@ -28,7 +29,7 @@ const router = createRouter({
                 {
                     path: 'board',
                     name: 'board',
-                    component: funnelBoard,
+                    component: leadBoard,
                 },
                 // {
                 //     path: 'card',
@@ -43,10 +44,15 @@ const router = createRouter({
             ],
         },
         {
-            path: '/contact',
-            name: 'contact',
-            component: funnelBoard,
+            path: '/scrum',
+            name: 'scrum',
+            component: homePage,
         },
+        // {
+        //     path: '/contact',
+        //     name: 'contact',
+        //     component: funnelBoard,
+        // },
     ],
 })
 

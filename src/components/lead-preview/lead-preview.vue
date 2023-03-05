@@ -1,13 +1,13 @@
 <template>
     <article class="lead-preview">
         <!-- <img v-if="lead.status !== 'New'" :src="lead.img" alt=""> -->
-        <div class="grid">
+        <div class="grid preview-content">
             <h4 class="name" ><span @click="openContactDetails">{{ lead.fullname }}</span></h4>
             <h5 class="details">טלפון: </h5>
             <!-- <span class="content" @click.stop="onPhoneCall(lead.phone)">{{ lead.phone }}</span> -->
             <span class="content phone" @click.stop="onPhoneCall(lead.phone)">{{ formattedPhoneNumber }}</span>
             <h5 class="details">מייל:</h5>
-            <span class="content" @click.stop="onSendEmail(lead.email)">{{ lead.email }}</span>
+            <span class="content email" @click.stop="onSendEmail(lead.email)">{{ lead.email }}</span>
         </div>
         <!-- <button v-if="lead.status === 'New'" @click="onTakeLead(lead._id)">+</button> -->
     </article>

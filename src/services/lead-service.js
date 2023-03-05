@@ -1,29 +1,48 @@
 import { sheetService } from './sheet-service.js'
+import { utilService } from './util-service.js'
 import { storageService } from './storage-service.js'
 import { userService } from './user.service.js'
+import { asyncStorageService } from './async-storage.service'
 
-const LEAD_KEY = 'leads_db'
+const LEADS_KEY = 'leads_db'
 const CONTACT_KEY = 'contact_db'
 
 export const leadService = {
+    // query,
     getLeads,
+    getLeadById,
     getNewLeads,
     getContacts,
     getTableFields,
     getBoardFields,
-    setTableFields,
+    // setTableFields,
     getLeadCardSections,
     // setUserPrefFields,
     getCurrFilterViews,
 }
 
-function getLeads() {
-    return storageService.getLeads(LEAD_KEY)
+// function query() {
+//     return asyncStorageService.query(LEADS_KEY)
+// }
+
+_createLeads()
+
+async function getLeads(filterBy = null) {
+    // console.log('filterBy: ', filterBy);
+    // let leads = _createLeads()
+    let leads = await asyncStorageService.query(LEADS_KEY)
+    leads = _filterLeads(leads, filterBy)
+    return leads
+    // return storageService.getLeads(LEADS_KEY)
     // return sheetService.getLeads()
 }
 
+async function getLeadById(id) {
+    return await asyncStorageService.get(LEADS_KEY, id)
+}
+
 function getNewLeads() {
-    return storageService.getNewLeads(LEAD_KEY)
+    return storageService.getNewLeads(LEADS_KEY)
     // return sheetService.getNewLeads()
 }
 
@@ -96,7 +115,7 @@ async function getFromMongo() {
 }
 
 function getMyContacts(userId) {
-    const leads = storageService.getLeads(LEAD_KEY)
+    const leads = storageService.getLeads(LEADS_KEY)
     let contacts = leads.filter(lead => lead.ownerId === userId)
     contacts.map(contact => {
         // gContacts.stages[contact.status].children.push(contact)
@@ -147,15 +166,16 @@ function getTableFields() {
         { id: 'tf106', key: 'email', txt: 'אימייל', isActive: true },
         { id: 'tf107', key: 'leadManager', txt: 'מנהל לקוח', isActive: true },
         { id: 'tf108', key: 'channel', txt: "צ'אנל", isActive: true },
-        { id: 'tf109', key: 'createdAt', txt: 'תאריך כניסה', isActive: true },
+        { id: 'tf109', key: 'createdAt', txt: 'תאריך כניסה', isActive: true, isDate: true },
         { id: 'tf111', key: 'message', txt: 'הודעה', isActive: true },
         { id: 'tf112', key: 'contactLog', txt: 'לוג שיחה', isActive: true },
         { id: 'tf113', key: 'source', txt: 'מקור', isActive: false },
         { id: 'tf114', key: 'stopper', txt: 'חסם פוטנציאלי', isActive: false },
         { id: 'tf115', key: 'lastContactMethod', txt: 'אמצעי קשר אחרון', isActive: false },
         { id: 'tf116', key: 'lastContactBy', txt: 'מי תקשר אחרון', isActive: false },
-        { id: 'tf117', key: 'lastContactAt', txt: 'תאריך תקשורת אחרון', isActive: false },
+        { id: 'tf117', key: 'lastContactAt', txt: 'תאריך תקשורת אחרון', isActive: false, isDate: true },
         { id: 'tf118', key: 'nextContactTime', txt: 'זמן התקשרות הבא', isActive: false },
+        { id: 'tf119', key: 'nextContactDate', txt: 'תאריך התקשרות הבא', isActive: false, isDate: true },
     ]
 }
 
@@ -169,15 +189,15 @@ function getBoardFields() {
         { id: 'bf106', key: 'interview', txt: 'בתהליך ראיון', isActive: true },
         { id: 'bf107', key: 'done', txt: 'רשומים', isActive: true },
         { id: 'bf108', key: 'close', txt: 'סגורים', isActive: true },
-    ] 
+    ]
 }
 
-function setTableFields(fields) {
-    let userPrefs = userService.getUserPrefs()
-    if (!userPrefs) userPrefs = {}
-    userPrefs.tableFields = fields //.map(field => field.isActive?)
-    userService.saveUserPrefs(userPrefs)
-}
+// function setTableFields(fields) {
+//     let userPrefs = userService.getUserPrefs()
+//     if (!userPrefs) userPrefs = {}
+//     userPrefs.tableFields = fields //.map(field => field.isActive?)
+//     userService.saveUserPrefs(userPrefs)
+// }
 // function setUserPrefFields(fields) {
 //     let userPrefs = userService.getUserPrefs()
 //     if (!userPrefs) userPrefs = {}
@@ -230,53 +250,63 @@ function getLeadCardSections() {
 function getCurrFilterViews(view) {
     let filterViews = {
         lead: [
-            { key: 'all', txt: 'כל הלידים', isActive: false },
+            { filterKey: 'all', key: 'all', txt: 'כל הלידים', isActive: true },
+            { filterKey: 'status', key: 'new', txt: 'לידים חדשים', isActive: false },
             {
                 key: 'status',
                 txt: 'סטטוס',
                 isActive: false,
                 options: [
-                    { key: 'new', txt: 'חדשים', isActive: false },
-                    { key: 'beforeIntro', txt: 'לפני ע"פ', isActive: false, details: '' },
+                    { filterKey: 'status', key: 'new', txt: 'חדשים', isActive: false },
+                    { filterKey: 'status', key: 'beforeIntro', txt: 'לפני ע"פ', isActive: false, details: '' },
                     {
-                        key: 'intro',
+                        filterKey: 'status', key: 'intro',
                         txt: 'ערב פתוח',
                         isActive: false,
                         details: { date: '', isConfirmed: true, whatsapp: true, phone: true },
                     },
-                    { key: 'afterIntro', txt: 'אחרי ע"פ', isActive: false, details: { date: '', didCome: true, gotChallenge: true } },
-                    { key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: false, details: '' },
-                    { key: 'interview', txt: 'בתהליך ראיון', isActive: false },
-                    { key: 'done', txt: 'רשומים', isActive: false },
-                    { key: 'close', txt: 'סגורים', isActive: false, details: '' },
+                    { filterKey: 'status', key: 'afterIntro', txt: 'אחרי ע"פ', isActive: false, details: { date: '', didCome: true, gotChallenge: true } },
+                    { filterKey: 'status', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: false, details: '' },
+                    { filterKey: 'status', key: 'interview', txt: 'בתהליך ראיון', isActive: false },
+                    { filterKey: 'status', key: 'done', txt: 'רשומים', isActive: false },
+                    { filterKey: 'status', key: 'close', txt: 'סגורים', isActive: false, details: '' },
                 ],
             },
             {
                 key: 'manager',
                 txt: 'מנהל',
                 isActive: false,
-                options: [],
+                options: [
+                    { filterKey: 'manager', key: 'me', txt: 'אני', isActive: false },
+                ],
                 // options: getManagers(),
             },
             {
-                key: 'nextContactTime',
+                key: 'nextContactDate',
                 txt: 'זמן התקשרות הבא',
                 isActive: false,
                 options: [
                     {
+                        // filterKey: 'nextContactDate', 
                         key: 'today',
                         txt: 'היום',
                         date: Date.now(),
                         isActive: false,
                         options: [
-                            { key: 'allDay', txt: 'כל היום', isActive: false },
-                            { key: 'morning', txt: 'בוקר', isActive: false },
-                            { key: 'noon', txt: 'צהריים', isActive: false },
-                            { key: 'evening', txt: 'ערב', isActive: false },
+                            { filterKey: 'nextContactTime', key: 'morning,noon,evening', txt: 'כל היום', isActive: false, },
+                            { filterKey: 'nextContactTime', key: 'morning', txt: 'בוקר', isActive: false, isMultiSelect: true, },
+                            { filterKey: 'nextContactTime', key: 'noon', txt: 'צהריים', isActive: false, isMultiSelect: true, },
+                            { filterKey: 'nextContactTime', key: 'evening', txt: 'ערב', isActive: false, isMultiSelect: true, },
+                            // { filterKey: 'nextContactTime', key: 'morning,noon,evening', txt: 'כל היום', isActive: false, date: Date.now(), },
+                            // { filterKey: 'nextContactTime', key: 'morning', txt: 'בוקר', isActive: false, date: Date.now(), isMultiSelect: true, },
+                            // { filterKey: 'nextContactTime', key: 'noon', txt: 'צהריים', isActive: false, date: Date.now(), isMultiSelect: true, },
+                            // { filterKey: 'nextContactTime', key: 'evening', txt: 'ערב', isActive: false, date: Date.now(), isMultiSelect: true, },
                         ],
                     },
                     {
-                        key: 'date',
+                        filterKey: 'nextContactDate',
+                        key: 'nextContactDate',
+                        // key: 'morning,noon,evening',
                         txt: 'בחר תאריך',
                         date: '',
                         type: 'date',
@@ -286,6 +316,137 @@ function getCurrFilterViews(view) {
         ],
     }
     return filterViews[view]
+}
+
+function _createLeads() {
+    let leads = utilService.loadFromStorage(LEADS_KEY)
+    if (!leads || !leads.length) {
+        leads = [
+            {
+                _id: 'fnB5b5KheZ',
+                // statusTxt: '',
+                status: 'new',
+                fullname: 'שגיא לוי',
+                firstName: 'שגיא',
+                lastName: 'לוי',
+                phone: '054-598-8518',
+                email: 'sasagsagi@gmail.com',
+                createdAt: 1672481130084,
+                channel: 'Website',
+                source: 'Google Ad',
+                message: 'הודעה: לא השאיר/ה הודעה',
+                lastContactAt: 1672581130084,
+                nextContactDate: 1677297600000,
+                nextContactTime: 'morning',
+            },
+            {
+                _id: '72D7O5BKYX',
+                // statusTxt: '',
+                status: 'beforeIntro',
+                fullname: 'נעמה בר',
+                firstName: 'נעמה',
+                lastName: 'בר',
+                phone: '054-238-6899',
+                email: 'lusya15@walla.com',
+                createdAt: 1672481130081,
+                channel: 'Facebook',
+                source: 'Facebook Ad',
+                message: '',
+                lastContactAt: 1672581130084,
+                nextContactDate: 1677470400000,
+                nextContactTime: 'morning',
+            },
+            {
+                _id: '7GRnvkOwl1',
+                // statusTxt: '',
+                status: 'beforeIntro',
+                fullname: 'יוסי שטרן',
+                firstName: 'יוסי',
+                lastName: 'שטרן',
+                phone: '054-572-2684',
+                email: 'Yossiv.il@gmail.com',
+                createdAt: 1672481130079,
+                channel: 'Website',
+                source: 'Orgaic',
+                message:
+                    'הודעה:  אני מנהל את הנכסים הדיגיטליים של אחת החברות המסחריות הגדולות בארץ והייתי רוצה להתמקצע יותר בפיתוח. אני כמובן עובד משרה מלאה , האם יש לכם קורס לימודי ערב/ לאנשים שעובדים במשרה מלאה?',
+                    lastContactAt: 1672581130084,
+                    nextContactDate: 1677297600000,
+                    nextContactTime: 'morning',    
+            },
+            {
+                _id: 'N96q8AxQcN',
+                // statusTxt: '',
+                status: 'new',
+                fullname: 'ראיד חורי',
+                firstName: 'ראיד',
+                lastName: "ח'ורי",
+                phone: '050-599-4990',
+                email: 'khouryrd@gmail.com',
+                createdAt: 1672481130082,
+                channel: 'Website',
+                source: 'Google Ad',
+                message: 'הודעה: לא השאיר/ה הודעה',
+                lastContactAt: 1672581130084,
+                nextContactDate: 1677470400000,
+                nextContactTime: 'morning',
+            },
+            {
+                _id: 'BNhDfbH6jq',
+                // statusTxt: '',
+                status: 'new',
+                fullname: 'נעם ברק',
+                firstName: 'נעם',
+                lastName: 'בורק',
+                phone: '058-786-1173',
+                email: 'n.burak77@gmail.com',
+                createdAt: 1672481130098,
+                channel: 'Facebook',
+                source: 'Facebook Ad',
+                message: '',
+                lastContactAt: 1672581130084,
+                nextContactDate: 1677297600000,
+                nextContactTime: 'morning',
+            },
+            {
+                _id: 'QpZBBVf6JM',
+                // statusTxt: '',
+                status: 'afterIntro',
+                fullname: 'כרמל שביט',
+                firstName: 'כרמל',
+                lastName: 'שביט',
+                phone: '054-525-6147',
+                email: 'carmel.shavit@gmail.com',
+                createdAt: 1672481123575,
+                channel: 'Website',
+                source: 'Google Ad',
+                message: ' לא השאיר/ה הודעה',
+                lastContactAt: 1672581130084,
+                nextContactDate: 1677470400000,
+                nextContactTime: 'morning',
+            },
+        ]
+        utilService.saveToStorage(LEADS_KEY, leads)
+        // localStorage.setItem(LEADS_KEY, JSON.stringify(leads))
+    }
+    return leads
+}
+
+function _filterLeads(leads, filterBy) {
+    // console.log('leads: ', leads);
+    // filterBy = {x:1,y:2}
+    if (!filterBy) return leads
+    const regex = new RegExp(filterBy.txt, 'i')
+    const filters = Object.entries(filterBy)
+    filters.forEach(([key, value]) => {
+        if (key === 'nextContactDate') {
+            leads = leads.filter(lead => new Date(value).toDateString() === new Date(lead[key]).toDateString())
+        } else if(key === 'txt') leads = leads.filter(lead => regex.test(JSON.stringify(lead)) || regex.test(lead.phone.replace(/\D/g, '')))
+         else leads = leads.filter(lead => value.includes(lead[key]))
+        // leads = leads.filter(lead => lead[key] === value)
+    })
+    // if(filterBy.status) leads = leads.filter(lead => lead.status === filterBy.status)
+    return leads
 }
 
 var gContacts = {

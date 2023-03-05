@@ -28,5 +28,49 @@
         }
     }
 
-    
+    .filter-sort {
+        .search {
+            @include search-input;
+            padding: 0;
+            width: 200px;
+            // background-color: aqua;
+            input {
+                position: relative;
+                width: 100%;
+                padding: 10px 12px;
+                outline: 1px solid $border-light;
+                outline-offset: -1px;
+                border-radius: 3px;
+                direction: rtl;
+                // transition: width .5s ease-in-out, direction 0s step-end .8s;
+                // transition: width 0.5s ease-in-out, scale 0.5s ease-in-out;
+                outline: 1px solid $secondary;
+                &:focus {
+                    outline: 1px solid $secondary;
+                }
+            }
+            .icon {
+                z-index: 40;
+                
+                // &:hover {
+                //     background-color: $txt-light-darker;         
+                //     fill: white;
+                // }
+            }
+
+            transition: width 0.5s ease-in-out;
+            &.close {
+                width: 40px;
+                input {
+                    outline: none;
+                    cursor: default;
+                }
+
+                .icon:hover {
+                    background-color: $txt-light-darker;         
+                    fill: white;
+                }
+            }
+        }
+    }
 }
