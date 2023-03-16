@@ -27,6 +27,7 @@ export default {
                 { path: '/', txt: 'בית' },
                 { path: '/lead', txt: 'לידים' },
                 { path: '/scrum', txt: 'SCRUM' },
+                { path: '/schedule', txt: 'יומן פגישות' },
             ]
         }
     },

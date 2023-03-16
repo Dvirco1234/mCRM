@@ -4,6 +4,7 @@
     & > * {
         width: 100%;
     }
+    // height: 100%;
 }
 
 .input.date-input {
@@ -16,15 +17,20 @@
 
 .dp-custom-input {
     // direction: ltr;
-    width: 99% !important;
+    width: 100% !important;
     // margin: 1px;
     padding-inline-start: 40px !important;
-    outline: 1px solid #0081c9;
+    outline: 1px solid #ccc;
     outline-offset: -1px;
     &.disabled {
         outline: none !important;
         padding-inline-start: 0 !important;
     }
+
+    &.dp__input_focus {
+        outline: 1px solid #0081c9;
+    }
+    
 }
 // .dp__clear_icon {
 //     display: none;

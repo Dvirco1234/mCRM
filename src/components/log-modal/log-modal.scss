@@ -28,6 +28,7 @@
         border-bottom: 1px solid rgb(230, 231, 232);
         height: 50px;
         padding-inline: 15px 13px;
+        z-index: 1;
     }
 
     .log-main {
@@ -36,6 +37,19 @@
         
         .log-form {
             height: 515px;
+
+            .followup-date {
+                margin-bottom: em(16px);
+
+                & > * {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .dp-custom-input {
+                    height: 41.6px;
+                }
+            }
 
             .form-field {
                 margin-bottom: em(16px);
@@ -53,8 +67,17 @@
                 
                 &.desc {
                     min-height: 61px;
-                    max-height: 292px;
+                    max-height: 264px;
                     overflow-y: auto;
+
+                    &:focus {
+                        outline: 1px solid #0081c9;
+                    }
+                }
+
+                &.followup-date {
+                    padding: 0;
+                    height: 41.6px;
                 }
             }
             .select {

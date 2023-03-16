@@ -9,11 +9,15 @@
 export default {
     name: 'date-picker',
     props: {
-        date: Number,
+        // date: Number,
+        date: {
+            type: Number,
+            default: Date.now(),
+        },
         isEditable: Boolean,
         // isEditable: {
         //     type: Boolean,
-        //     default: false,
+        //     default: true,
         // },
         field: Object,
         minDate: {

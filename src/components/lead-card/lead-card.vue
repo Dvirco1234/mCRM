@@ -8,9 +8,10 @@
             </div>
             <div class="actions flex gap-20 cursor-pointer">
                 <svgIcon iconType="mail" className="circle hover lg-bg" title="שלח אימייל" class="mail" />
-                <svgIcon iconType="phone" className="circle hover lg-bg" title="בצע שיחה" class="phone" />
+                <svgIcon iconType="phone" className="circle hover lg-bg" title="בצע שיחה" class="phone" @click="modals.call = !modals.call"/>
                 <svgIcon iconType="whatsapp2" className="circle hover lg-bg" title="שלח ווצאפ" class="whatsapp" />
             </div>
+            <MakeCallModal :lead="lead" @openLog="openModal" @closeCall="closeModal" v-if="modals.call"/>
         </header>
         <main class="lead-card-main grid">
             <article class="lead-details card-article">
@@ -50,14 +51,16 @@
             <article class="manager-section flex flex-column gap-20">
                 <section class="card-article actions-section">
                     <!-- <div class="btn flex align-center gap-6" v-for="action in actions" :key="action.key" @click="onPickAction(action.action)"> -->
-                    <div class="btn flex align-center gap-6" v-for="action in actions" :key="action.key" @click="action.action">
+                    <div class="btn flex align-center gap-6" v-for="action in actions" :key="action.key" @click="action.action(action.key)">
                         <svgIcon :iconType="action.icon" class="svg-btn" :isSmall="true" />
                         <span>{{ action.txt }}</span>
                     </div>
                 </section>
-                <logModal v-if="isLogModalOpen" @closeModal="closeLogModal" />
-                <section class="card-article log-card">
-                    
+                <logModal v-if="modals.log" @closeModal="closeModal" />
+                <section class="card-article logs-section">
+                    <div class="log-card">
+
+                    </div>
                 </section>
             </article>
         </main>
@@ -67,11 +70,12 @@
 // import SvgIcon from '../svg-icon.vue'
 import { leadService } from '../../services/lead-service'
 import datePicker from '../utils/date-picker/date-picker.vue'
-import firstLetter from '../utils/first-letter.vue'
+// import firstLetter from '../utils/first-letter.vue'
 import logModal from '../log-modal/log-modal.vue'
+import MakeCallModal from '../make-call-modal/make-call-modal.vue'
 
 export default {
-    name: 'contact-card',
+    name: 'lead-card',
     props: { type: Object },
     data() {
         return {
@@ -81,10 +85,14 @@ export default {
             actions: [
                 { key: 'note', txt: 'הערה', icon: 'editNote' },
                 { key: 'task', txt: 'משימה', icon: 'checkboxChecked' },
-                { key: 'log', txt: 'לוג שיחה', icon: 'phone', action: this.openLogModal },
+                { key: 'log', txt: 'לוג שיחה', icon: 'phone', action: this.openModal },
                 // { key: 'log', txt: 'לוג שיחה', icon: 'phone', action: 'openLogModal' },
             ],
-            isLogModalOpen: false,
+            modals: {
+                log: false,
+                call: false,
+                whatsapp: false,
+            },
         }
     },
     created() {
@@ -126,15 +134,23 @@ export default {
         updateLeadField({ key, value }) {
             this.lead[key] = value
         },
+        openModal(type = '') {
+            if(!type) return
+            this.modals[type] = true
+        },
+        closeModal(type = '') {
+            // if(!type) 
+            this.modals[type] = false
+        },
         openLogModal() {
             this.isLogModalOpen = true
+        },
+        closeLogModal() {
+            this.isLogModalOpen = false
         },
         // onPickAction(act) {
         //     if(act === 'openLogModal') this.isLogModalOpen = true
         // },
-        closeLogModal() {
-            this.isLogModalOpen = false
-        },
     },
     computed: {
         currLead() {
@@ -162,11 +178,12 @@ export default {
     },
     unmounted() { },
     components: {
-        // SvgIcon,
-        datePicker,
-        firstLetter,
-        logModal,
-    },
+    // SvgIcon,
+    datePicker,
+    // firstLetter,
+    logModal,
+    MakeCallModal
+},
     watch: {
         '$route.params.id': {
             async handler() {

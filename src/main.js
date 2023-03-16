@@ -4,7 +4,9 @@ import App from './App.vue'
 import router from './router'
 // import { Quasar } from 'quasar'
 import Datepicker from '@vuepic/vue-datepicker'
+// import datePickerCmp from './components/utils/date-picker/date-picker.vue'
 import svgIcon from './components/svg-icon.vue'
+import firstLetter from './components/utils/first-letter.vue'
 import selectDropdown from './components/utils/select-dropdown.vue'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -30,8 +32,10 @@ app.config.globalProperties.$filters = {
 app.directive('click-outside', clickOutsideDirective)
 app.directive('resize', columnsResizableDirective)
 
+// app.component('Cmp', datePickerCmp)
 app.component('Datepicker', Datepicker)
 app.component('svgIcon', svgIcon)
+app.component('firstLetter', firstLetter)
 app.component('selectDropdown', selectDropdown)
 
 app.use(router)

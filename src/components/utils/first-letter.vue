@@ -1,5 +1,5 @@
 <template>
-    <div class="first-letter flex-center" :style="{ 'background-color': getColor }">{{ $filters.firstLetter(word) }}{{ $filters.firstLetter(secondWord) }}</div>
+    <div class="first-letter flex-center" :style="{ 'background-color': getColor, ...size }">{{ $filters.firstLetter(word) }}{{ $filters.firstLetter(secondWord) }}</div>
 </template>
 <script>
 export default {
@@ -10,6 +10,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        size: {
+            type: Number,
+            default: 40,
+        }
     },
     data() {
         return {
@@ -26,13 +30,23 @@ export default {
             return "hsl(" + 360 * Math.random() + ',' +
                 (15 + 70 * Math.random()) + '%,' +
                 (75 + 10 * Math.random()) + '%)'
+        },
+        size() {
+            return {width: `${this.size}px`, height: `${this.size}px`, 'font-size': `${this.size / 2}px`}
         }
     },
+    watch: {
+        word() {
+            if (!this.isTwoLetters) return
+            const words = this.word.split(' ')
+            this.secondWord = words.length > 1 ? words[1] : ''
+        }
+    }
 }
 </script>
 <style>
 .first-letter {
-    margin: 0 10px;
+    /* margin: 0 10px; */
     letter-spacing: 1px;
 }
 </style>

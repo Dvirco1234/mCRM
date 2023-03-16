@@ -41,6 +41,14 @@ async function getLeadById(id) {
     return await asyncStorageService.get(LEADS_KEY, id)
 }
 
+// async function saveLead(lead) {
+//     if (lead._id) {
+//         await asyncStorageService.put(LEADS_KEY, lead)
+//         return updatedBoard
+//     }
+//     else return await asyncStorageService.put(LEADS_KEY, lead)
+// }
+
 function getNewLeads() {
     return storageService.getNewLeads(LEADS_KEY)
     // return sheetService.getNewLeads()
@@ -181,14 +189,14 @@ function getTableFields() {
 
 function getBoardFields() {
     return [
-        { id: 'bf101', key: 'new', txt: 'חדשים', isActive: true },
-        { id: 'bf102', key: 'beforeIntro', txt: 'לפני ע"פ', isActive: true },
-        { id: 'bf103', key: 'intro', txt: 'ערב פתוח', isActive: true },
-        { id: 'bf104', key: 'afterIntro', txt: 'אחרי ע"פ', isActive: true },
-        { id: 'bf105', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: true },
-        { id: 'bf106', key: 'interview', txt: 'בתהליך ראיון', isActive: true },
-        { id: 'bf107', key: 'done', txt: 'רשומים', isActive: true },
-        { id: 'bf108', key: 'close', txt: 'סגורים', isActive: true },
+        { id: 'bf101', key: 'new', txt: 'חדשים', isActive: true, children: [] },
+        { id: 'bf102', key: 'beforeIntro', txt: 'לפני ע"פ', isActive: true, children: [] },
+        { id: 'bf103', key: 'intro', txt: 'ערב פתוח', isActive: true, children: [] },
+        { id: 'bf104', key: 'afterIntro', txt: 'אחרי ע"פ', isActive: true, children: [] },
+        { id: 'bf105', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: true, children: [] },
+        { id: 'bf106', key: 'interview', txt: 'בתהליך ראיון', isActive: true, children: [] },
+        { id: 'bf107', key: 'done', txt: 'רשומים', isActive: true, children: [] },
+        { id: 'bf108', key: 'close', txt: 'סגורים', isActive: true , children: []},
     ]
 }
 
@@ -238,7 +246,7 @@ function getLeadCardSections() {
                 { key: 'lastContactMethod', txt: 'אמצעי קשר אחרון', isActive: true, isEditable: false },
                 { key: 'lastContactBy', txt: 'מי תקשר אחרון', isActive: true, isEditable: false },
                 { key: 'lastContactAt', txt: 'תאריך תקשורת אחרון', isActive: true, isEditable: false, type: 'date' },
-                { key: 'nextContactTime', txt: 'זמן התקשרות הבא', isActive: true, isEditable: false, type: 'date' },
+                { key: 'nextContactDate', txt: 'תאריך התקשרות הבא', isActive: true, isEditable: false, type: 'date' },
             ],
         },
     ]

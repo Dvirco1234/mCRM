@@ -48,6 +48,11 @@ const router = createRouter({
             name: 'scrum',
             component: homePage,
         },
+        {
+            path: '/schedule',
+            name: 'schedule',
+            component: homePage,
+        },
         // {
         //     path: '/contact',
         //     name: 'contact',

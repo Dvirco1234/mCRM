@@ -55,6 +55,7 @@ $txt-middle: #a6a8ab;
 $bg-light: #fff; //bg
 $bg-light-darken: rgb(249, 249, 249);
 $border-light: #e6e7e8;
+$border-light-darker: darken($color: $border-light, $amount: 7);
 
 $txt-light-darker1: #808184;
 

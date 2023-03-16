@@ -38,6 +38,7 @@
         cursor: pointer;
         font-size: em(15px);
         line-height: 1.5;
+        max-width: max-content;
         &:hover {
             text-decoration: underline;
         }
@@ -64,4 +65,15 @@
     }
     gap: em(5px);
     margin-block-end: em(5px);
+
+    &.side-nav-mode {
+        cursor: pointer;
+        margin: 0;
+        border-top: none;
+        border-inline-end: none;
+
+        &:hover {
+            background: rgb(249, 249, 249);
+        }
+    }
 }

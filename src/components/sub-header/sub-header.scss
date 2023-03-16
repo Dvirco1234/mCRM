@@ -38,13 +38,13 @@
                 position: relative;
                 width: 100%;
                 padding: 10px 12px;
-                outline: 1px solid $border-light;
+                outline: 1px solid $border-light-darker;
                 outline-offset: -1px;
                 border-radius: 3px;
                 direction: rtl;
                 // transition: width .5s ease-in-out, direction 0s step-end .8s;
                 // transition: width 0.5s ease-in-out, scale 0.5s ease-in-out;
-                outline: 1px solid $secondary;
+                // outline: 1px solid $secondary;
                 &:focus {
                     outline: 1px solid $secondary;
                 }

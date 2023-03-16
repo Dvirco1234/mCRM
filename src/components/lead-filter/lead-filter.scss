@@ -8,6 +8,10 @@
     // box-shadow: inset 1px 0 0 $border-light;
     overflow-y: auto;
 
+    .filter, .lead-list {
+        height: 100%;
+    }
+
     .search {
         @include search-input;
     }

@@ -2,11 +2,15 @@
     <article class="select-wrapper" >
         <div class="options-wrapper">
             <div class="selected" @click="toggleOptions" v-click-outside="closeOptions" :class="{ open: isOptionsShow }">
-                <span>{{ selectedOption.label }}</span>
+                <!-- <span>{{ selectedOption.label }}</span> -->
+                <div class="flex flex-column">
+                    <label class="select-label">{{selectLabel}}</label>
+                    <span class="value">{{ selectedOption.label }}</span>
+                </div>
                 <svg-icon iconType="expandDown" :className="isOptionsShow? 'rotate-180': ''" />
             </div>
             <div class="options" :class="{ hide: !isOptionsShow, open: isOptionsShow }">
-                <div v-for="(option, idx) in options" :key="option.key" class="option" @click="selectOption(option)">
+                <div v-for="option in optionsFormat" :key="option.key" class="option" @click="selectOption(option)">
                     {{ option.label }}
                 </div>
             </div>
@@ -21,10 +25,22 @@ export default {
             type: Array,
             default: () => []
         },
-        value: {
+        iconColor: {
             type: String,
-            default: ''
-        }
+            default: '#005FAA'
+        },
+        primaryColor: { type: String, default: '#005faa' },
+        selectLabel: { type: String, default: '' },
+        bgColor: { type: String, default: '#fff' },
+        defaultOption: {
+            type: Object,
+            default: () => ({ label: 'בחר', key: '' })
+        },
+        // value: {
+        //     type: String,
+        //     default: ''
+        // },
+        modelValue: String,
     },
     data() {
         return {
@@ -33,8 +49,7 @@ export default {
         }
     },
     mounted() {
-        const defaultOption = { label: 'בחר', key: '' }
-        this.selectedOption = this.options.find((option) => option.key === this.value) || defaultOption
+        this.selectedOption = this.optionsFormat.find((option) => option.key === this.modelValue) || this.defaultOption
     },
     methods: {
         toggleOptions() {
@@ -47,24 +62,20 @@ export default {
             console.log('option: ', option);
             this.selectedOption = option
             this.closeOptions()
-            // this.$emit('change', option.key)
-            this.$emit('input', option.key)
+            this.$emit('update:modelValue', option.key)
+            // this.$emit('input', option.key)
         }
     },
-    // watch: {
-    //     value(val) {
-    //         this.selectedOption = this.options.find((option) => option.key === val) || { label: 'בחר', value: '' }
-    //     }
-    // },
     computed: {
         selectedValue() {
             return this.selectedOption.key
-        }
+        },
+        optionsFormat() {
+            if(!this.options || !this.options.length) return []
+            if (typeof this.options[0] === 'object') return this.options
+            else return this.options.map(o => ({label: o, key: o}))
+        },
     },
-    model: {
-        prop: 'value',
-        event: 'change'
-    }
 }
 </script>
 <style lang="scss">
@@ -96,6 +107,21 @@ export default {
             }
 
             transition: rotate .3s;
+
+            .flex-column {
+                row-gap: 2px;
+            }
+            .select-label {
+                color: #7B97AC;
+                font-size: 13px;
+                line-height: 1;
+            }
+            
+            .value {
+                color: #002644;
+                font-size: 18px;
+                line-height: 1;
+            }
         }
 
         .options {
@@ -133,44 +159,5 @@ export default {
             }
         }
     }
-
-    // &.open {
-    //     // min-height: 238px;
-
-    //     .selected {
-    //         border-radius: 4px 4px 0 0;
-    //     }
-
-    //     .options {
-    //         transform: scaleY(1);
-    //     }
-    // }
 }
 </style>
-  
-
-
-
-
-<!-- <template>
-    <section>
-
-    </section>
-</template>
-<script>
-export default {
-    name: 'select-dropdown',
-    props: { options: Array },
-    data() {
-        return {}
-    },
-    created() { },
-    methods: {},
-    computed: {},
-    unmounted() { },
-    components: {}
-}
-</script>
-<style lang="scss">
-
-</style> -->

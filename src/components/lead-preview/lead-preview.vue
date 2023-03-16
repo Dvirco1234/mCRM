@@ -1,8 +1,11 @@
 <template>
-    <article class="lead-preview">
+    <article class="lead-preview" :class="{'side-nav-mode': $route.name === 'card'}">
         <!-- <img v-if="lead.status !== 'New'" :src="lead.img" alt=""> -->
         <div class="grid preview-content">
-            <h4 class="name" ><span @click="openContactDetails">{{ lead.fullname }}</span></h4>
+            <h4 class="name flex align-center gap-6" >
+                <firstLetter :word="lead.fullname" :size="30" v-if="$route.name === 'card'"/>
+                <span @click="openContactDetails">{{ lead.fullname }}</span>
+            </h4>
             <h5 class="details">טלפון: </h5>
             <!-- <span class="content" @click.stop="onPhoneCall(lead.phone)">{{ lead.phone }}</span> -->
             <span class="content phone" @click.stop="onPhoneCall(lead.phone)">{{ formattedPhoneNumber }}</span>

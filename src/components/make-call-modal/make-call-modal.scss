@@ -1,0 +1,40 @@
+.make-call-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 600px;
+    height: 400px;
+    background-color: white;
+    box-shadow: 0px 0px 4px 1px $border-light;
+    border: 1px solid $border-light;
+    border-radius: 4px;
+    padding: 20px;
+
+    header {
+        height: 10%;
+        gap: 6px;
+        margin-bottom: 25px;
+        
+        .phone {
+            background-color: rgb(50, 86, 138);
+            fill: white;
+        }
+        // h2 {
+            
+            // }
+        }
+        
+        main {
+            // height: 80%;
+            height: max-content;
+            margin-bottom: 25px;
+            
+        .qr-code {
+            // position: absolute;
+            // top: 50%;
+            // right: 20px;
+            // translate: 0 -50%;
+        }
+    }
+}
