@@ -4,7 +4,7 @@
         <div class="grid preview-content">
             <h4 class="name flex align-center gap-6" >
                 <firstLetter :word="lead.fullname" :size="30" v-if="$route.name === 'card'"/>
-                <span @click="openContactDetails">{{ lead.fullname }}</span>
+                <span @click="openLeadCard">{{ lead.fullname }}</span>
             </h4>
             <h5 class="details">טלפון: </h5>
             <!-- <span class="content" @click.stop="onPhoneCall(lead.phone)">{{ lead.phone }}</span> -->
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-    name: '',
+    name: 'lead-preview',
     props: {
         lead: Object,
     },
@@ -28,8 +28,10 @@ export default {
         }
     },
     methods: {
-        openContactDetails() {
-            console.log('here');
+        openLeadCard() {
+            const {lead} = this
+            this.$store.commit({ type: 'setCurrLead', lead })
+            this.$router.push(`/lead/card/${lead._id}`)
         },
         onPhoneCall(phone) {
             const cleanPhone = phone.replace(/\D/g, '')

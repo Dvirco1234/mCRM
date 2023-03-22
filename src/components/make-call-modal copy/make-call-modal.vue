@@ -5,7 +5,9 @@
             <h2>התקשרות עם {{ lead.fullname }}</h2>
         </header>
         <main class="flex align-center space-between">
-            <vue-qrcode :width="220" :value="`tel:${tel}`" :color="{ dark: '#444444', light: '#f9f9f9' }" :margin="0" class="qr-code"></vue-qrcode>
+            <vue-qrcode :width="220" :value="`tel:${tel}`" :color="{ dark: '#444444', light: '#f9f9f9' }" :margin="0"
+                class="qr-code" :type="'image/png'"></vue-qrcode>
+                <!-- <qrCode/> -->
             <article class="make-call h100">
                 <h4>שיחה באמצעות מיקרוסופט</h4>
             </article>
@@ -22,11 +24,15 @@ export default {
     data() {
         return {
             tel: '12345',
+            showQrCode: false,
         }
     },
     created() {
         console.log('this.lead: ', this.lead)
         this.tel = this.lead.phone
+    },
+    mounted() {
+        this.showQrCode = true
     },
     methods: {
         closeModalOpenLog() {
@@ -37,7 +43,7 @@ export default {
     computed: {},
     unmounted() { },
     components: {
-        VueQrcode
+        VueQrcode,
     }
 }
 </script>

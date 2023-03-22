@@ -10,6 +10,7 @@ const CONTACT_KEY = 'contact_db'
 export const leadService = {
     // query,
     getLeads,
+    saveLead,
     getLeadById,
     getNewLeads,
     getContacts,
@@ -41,13 +42,10 @@ async function getLeadById(id) {
     return await asyncStorageService.get(LEADS_KEY, id)
 }
 
-// async function saveLead(lead) {
-//     if (lead._id) {
-//         await asyncStorageService.put(LEADS_KEY, lead)
-//         return updatedBoard
-//     }
-//     else return await asyncStorageService.put(LEADS_KEY, lead)
-// }
+async function saveLead(lead) {
+    if (lead._id) return await asyncStorageService.put(LEADS_KEY, lead)
+    else return await asyncStorageService.post(LEADS_KEY, lead)
+}
 
 function getNewLeads() {
     return storageService.getNewLeads(LEADS_KEY)
@@ -196,7 +194,7 @@ function getBoardFields() {
         { id: 'bf105', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: true, children: [] },
         { id: 'bf106', key: 'interview', txt: 'בתהליך ראיון', isActive: true, children: [] },
         { id: 'bf107', key: 'done', txt: 'רשומים', isActive: true, children: [] },
-        { id: 'bf108', key: 'close', txt: 'סגורים', isActive: true , children: []},
+        { id: 'bf108', key: 'close', txt: 'סגורים', isActive: true, children: [] },
     ]
 }
 
@@ -222,7 +220,7 @@ function getLeadCardSections() {
             name: 'פרטים כלליים',
             isOpen: true,
             fields: [
-                { key: 'status', txt: 'סטטוס', isActive: true, isEditable: false },
+                { key: 'status', txt: 'סטטוס', isActive: true, isEditable: false, type: 'select' },
                 { key: 'fullname', txt: 'שם מלא', isActive: true, isEditable: false },
                 { key: 'firstName', txt: 'שם פרטי', isActive: true, isEditable: false },
                 { key: 'lastName', txt: 'שם משפחה', isActive: true, isEditable: false },
@@ -268,12 +266,19 @@ function getCurrFilterViews(view) {
                     { filterKey: 'status', key: 'new', txt: 'חדשים', isActive: false },
                     { filterKey: 'status', key: 'beforeIntro', txt: 'לפני ע"פ', isActive: false, details: '' },
                     {
-                        filterKey: 'status', key: 'intro',
+                        filterKey: 'status',
+                        key: 'intro',
                         txt: 'ערב פתוח',
                         isActive: false,
                         details: { date: '', isConfirmed: true, whatsapp: true, phone: true },
                     },
-                    { filterKey: 'status', key: 'afterIntro', txt: 'אחרי ע"פ', isActive: false, details: { date: '', didCome: true, gotChallenge: true } },
+                    {
+                        filterKey: 'status',
+                        key: 'afterIntro',
+                        txt: 'אחרי ע"פ',
+                        isActive: false,
+                        details: { date: '', didCome: true, gotChallenge: true },
+                    },
                     { filterKey: 'status', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: false, details: '' },
                     { filterKey: 'status', key: 'interview', txt: 'בתהליך ראיון', isActive: false },
                     { filterKey: 'status', key: 'done', txt: 'רשומים', isActive: false },
@@ -284,9 +289,7 @@ function getCurrFilterViews(view) {
                 key: 'manager',
                 txt: 'מנהל',
                 isActive: false,
-                options: [
-                    { filterKey: 'manager', key: 'me', txt: 'אני', isActive: false },
-                ],
+                options: [{ filterKey: 'manager', key: 'me', txt: 'אני', isActive: false }],
                 // options: getManagers(),
             },
             {
@@ -295,16 +298,16 @@ function getCurrFilterViews(view) {
                 isActive: false,
                 options: [
                     {
-                        // filterKey: 'nextContactDate', 
+                        // filterKey: 'nextContactDate',
                         key: 'today',
                         txt: 'היום',
                         date: Date.now(),
                         isActive: false,
                         options: [
-                            { filterKey: 'nextContactTime', key: 'morning,noon,evening', txt: 'כל היום', isActive: false, },
-                            { filterKey: 'nextContactTime', key: 'morning', txt: 'בוקר', isActive: false, isMultiSelect: true, },
-                            { filterKey: 'nextContactTime', key: 'noon', txt: 'צהריים', isActive: false, isMultiSelect: true, },
-                            { filterKey: 'nextContactTime', key: 'evening', txt: 'ערב', isActive: false, isMultiSelect: true, },
+                            { filterKey: 'nextContactTime', key: 'morning,noon,evening', txt: 'כל היום', isActive: false },
+                            { filterKey: 'nextContactTime', key: 'morning', txt: 'בוקר', isActive: false, isMultiSelect: true },
+                            { filterKey: 'nextContactTime', key: 'noon', txt: 'צהריים', isActive: false, isMultiSelect: true },
+                            { filterKey: 'nextContactTime', key: 'evening', txt: 'ערב', isActive: false, isMultiSelect: true },
                             // { filterKey: 'nextContactTime', key: 'morning,noon,evening', txt: 'כל היום', isActive: false, date: Date.now(), },
                             // { filterKey: 'nextContactTime', key: 'morning', txt: 'בוקר', isActive: false, date: Date.now(), isMultiSelect: true, },
                             // { filterKey: 'nextContactTime', key: 'noon', txt: 'צהריים', isActive: false, date: Date.now(), isMultiSelect: true, },
@@ -346,6 +349,22 @@ function _createLeads() {
                 lastContactAt: 1672581130084,
                 nextContactDate: 1677297600000,
                 nextContactTime: 'morning',
+                logs: [
+                    {
+                        createdAt: 1672486130084,
+                        managerName: 'דביר כהן',
+                        type: 'phone',
+                        result: 'phone',
+                        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ipsam molestias eaque odit provident dolorem tempora modi facere. Minima, dicta.',
+                    },
+                    {
+                        createdAt: 1672486130084,
+                        managerName: 'דביר כהן',
+                        type: 'phone',
+                        result: 'phone',
+                        description: 'ביקש שאחזור אליו עוד עשר דקות',
+                    },
+                ],
             },
             {
                 _id: '72D7O5BKYX',
@@ -378,9 +397,9 @@ function _createLeads() {
                 source: 'Orgaic',
                 message:
                     'הודעה:  אני מנהל את הנכסים הדיגיטליים של אחת החברות המסחריות הגדולות בארץ והייתי רוצה להתמקצע יותר בפיתוח. אני כמובן עובד משרה מלאה , האם יש לכם קורס לימודי ערב/ לאנשים שעובדים במשרה מלאה?',
-                    lastContactAt: 1672581130084,
-                    nextContactDate: 1677297600000,
-                    nextContactTime: 'morning',    
+                lastContactAt: 1672581130084,
+                nextContactDate: 1677297600000,
+                nextContactTime: 'morning',
             },
             {
                 _id: 'N96q8AxQcN',
@@ -449,8 +468,9 @@ function _filterLeads(leads, filterBy) {
     filters.forEach(([key, value]) => {
         if (key === 'nextContactDate') {
             leads = leads.filter(lead => new Date(value).toDateString() === new Date(lead[key]).toDateString())
-        } else if(key === 'txt') leads = leads.filter(lead => regex.test(JSON.stringify(lead)) || regex.test(lead.phone.replace(/\D/g, '')))
-         else leads = leads.filter(lead => value.includes(lead[key]))
+        } else if (key === 'txt')
+            leads = leads.filter(lead => regex.test(JSON.stringify(lead)) || regex.test(lead.phone.replace(/\D/g, '')))
+        else leads = leads.filter(lead => value.includes(lead[key]))
         // leads = leads.filter(lead => lead[key] === value)
     })
     // if(filterBy.status) leads = leads.filter(lead => lead.status === filterBy.status)

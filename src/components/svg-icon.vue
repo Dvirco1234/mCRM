@@ -1,5 +1,5 @@
 <template>
-    <section v-html="type[iconType]" class="icon-svg" :class="[{small: isSmall}, className]"></section>
+    <section v-html="type[iconType]" class="icon-svg" :class="[{ small: isSmall }, className]"></section>
 </template>
   
 <script>
@@ -44,6 +44,7 @@ export default {
                 editNote: `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M480 936v-85l212-212 85 85-212 212h-85ZM120 736v-80h280v80H120Zm685-40-85-85 29-29q11-11 28-11t28 11l29 29q11 11 11 28t-11 28l-29 29ZM120 576v-80h440v80H120Zm0-160v-80h440v80H120Z"/></svg>`,
                 // minimize: `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M160 896v-80h640v80H160Z"/></svg>`,
                 minimize: `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M240 936v-80h480v80H240Z" style="translate: 0 -30%"/></svg>`,
+                user: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960" ><path d="M234 780q51-39 114-61.5T480 696q69 0 132 22.5T726 780q35-41 54.5-93T800 576q0-133-93.5-226.5T480 256q-133 0-226.5 93.5T160 576q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340 476q0-59 40.5-99.5T480 336q59 0 99.5 40.5T620 476q0 59-40.5 99.5T480 616Zm0 360q-83 0-156-31.5T197 859q-54-54-85.5-127T80 576q0-83 31.5-156T197 293q54-54 127-85.5T480 176q83 0 156 31.5T763 293q54 54 85.5 127T880 576q0 83-31.5 156T763 859q-54 54-127 85.5T480 976Z"/></svg>`,
                 y: ``,
             }
         }
@@ -137,8 +138,19 @@ export default {
         }
     }
 
+    &.md-bg {
+        width: 24px;
+        height: 24px;
+
+        svg {
+            height: 19px;
+            width: 19px;
+        }
+    }
+
     svg {
-        transition: scale 0.5s, rotate 0.2s;;
+        transition: scale 0.5s, rotate 0.2s;
+        ;
         height: 100%;
         width: 100%;
         // display: flex;

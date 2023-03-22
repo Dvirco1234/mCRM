@@ -15,7 +15,6 @@
         // z-index: 10;
         z-index: 1;
 
-
         .svg-btn {
             fill: $txt-dark-darker;
         }
@@ -29,22 +28,27 @@
             font-weight: 400;
         }
 
-        .actions {
-            // margin-inline-start: 40px;
-            justify-self: end;
-
-            .whatsapp {
-                background: linear-gradient(135deg, #61fd7d 0%, #2bb826 100%);
-                fill: white;
-            }
-            .phone {
-                background-color: rgb(50, 86, 138);
-                fill: white;
-            }
-            .mail {
-                background-color: #ff2e00;
-                fill: white;
-            }
+    }
+    
+    .actions, .icons {
+        justify-self: end;
+        // & > * {
+        //     fill: white;
+        // }
+        .whatsapp {
+            background: linear-gradient(135deg, #61fd7d 0%, #2bb826 100%);
+            fill: white;
+        }
+        .phone {
+            background-color: rgb(50, 86, 138);
+            fill: white;
+        }
+        .mail {
+            background-color: #ff2e00;
+            fill: white;
+        }
+        .user {
+            fill: rgb(50, 86, 138);
         }
     }
 
@@ -71,9 +75,9 @@
     }
 
     .logs-section {
-        display: flex;
+        // display: flex;
         width: 100%;
-        min-height: 300px;
+        // min-height: 300px;
         padding: 16px;
 
         .log-card {
@@ -81,6 +85,35 @@
             width: 100%;
             border: 1px solid $border-light;
             border-radius: 4px;
+
+            label {
+                font-size: em(12px);
+                color: $txt-light-darker1;
+                p {
+                    font-size: em(19px);
+                    color: $txt-dark-darker;
+                }
+            }
+
+            .desc {
+                width: 100%;
+                pre {
+                    width: 100%;
+                    white-space:pre-wrap;
+                    font-family: Arimo, sans-serif;
+                    padding: 12px 0;
+                }
+            }
+
+            .date-by {
+                color: $txt-light-darker1;
+                font-size: em(12px);
+                
+                .date {
+                    color: $txt-light-darker;
+                    margin-inline-start: 10px;
+                }
+            }
         }
     }
 
@@ -92,7 +125,12 @@
             // padding: 10px 4px;
             // }
 
-            .input-label {
+            .field-wrapper,
+            .form-field {
+                overflow: visible;
+            }
+
+            .field-wrapper {
                 font-size: em(13px);
                 // min-width: 300px;
                 flex-basis: 90%;
@@ -122,7 +160,7 @@
                         }
                     }
                 }
-                
+
                 &:hover {
                     background-color: rgb(249, 249, 249);
                     .icon {
@@ -152,11 +190,32 @@
                         outline: 1px solid #0081c9;
                     }
 
-                    &.phone-email {
-                        color: $secondary;
-                        &:hover {
-                            text-decoration: underline;
+                    &-p {
+                        font-size: em(18px);
+                        padding: 3px 0;
+                        &.phone-email {
+                            color: $secondary;
+                            max-width: max-content;
+                            &:hover {
+                                text-decoration: underline;
+                            }
                         }
+                    }
+
+                    .selected {
+                        height: 31px;
+                        padding: 6px 12px;
+                        background-color: #fff;
+                        border-color: #0081c9;
+                        span.value {
+                            font-family: Arimo, sans-serif;
+                            font-size: em(16px) !important;
+                        }
+                    }
+
+                    &.select-wrapper {
+                        padding: 0;
+                        outline: none;
                     }
                 }
 

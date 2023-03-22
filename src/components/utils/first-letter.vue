@@ -1,5 +1,5 @@
 <template>
-    <div class="first-letter flex-center" :style="{ 'background-color': getColor, ...size }">{{ $filters.firstLetter(word) }}{{ $filters.firstLetter(secondWord) }}</div>
+    <div class="first-letter flex-center" :style="{ 'background-color': getColor, ...letterSize }">{{ $filters.firstLetter(word) }}{{ $filters.firstLetter(secondWord) }}</div>
 </template>
 <script>
 export default {
@@ -31,7 +31,7 @@ export default {
                 (15 + 70 * Math.random()) + '%,' +
                 (75 + 10 * Math.random()) + '%)'
         },
-        size() {
+        letterSize() {
             return {width: `${this.size}px`, height: `${this.size}px`, 'font-size': `${this.size / 2}px`}
         }
     },

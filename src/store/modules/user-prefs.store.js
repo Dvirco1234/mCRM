@@ -79,7 +79,6 @@ export const userPrefsStore = {
             })
         },
         toggleCardInputEditable(state, { sectionId, fieldIdx }) {
-            console.log('fieldIdx: ', fieldIdx)
             const idx = state.cardSections.findIndex(s => s.id === sectionId)
             state.cardSections[idx].fields[fieldIdx].isEditable = !state.cardSections[idx].fields[fieldIdx].isEditable
         },

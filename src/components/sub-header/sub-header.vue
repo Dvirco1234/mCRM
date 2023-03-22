@@ -122,7 +122,7 @@ export default {
             this.isSearchOpen = !this.isSearchOpen
         },
         closeSearchInput() {
-            if (this.filterByTxt) return
+            if (this.filterByTxt || !this.isSearchOpen) return
             this.isSearchOpen = false
             this.filterByTxt = ''
             this.searchLeads()

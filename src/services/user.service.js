@@ -131,7 +131,9 @@ async function logout() {
 // }
 
 function getLoggedinUser() {
-    return JSON.parse(sessionStorage.getItem(LOGGED_IN_USER) || 'null')
+    let user = JSON.parse(sessionStorage.getItem(LOGGED_IN_USER) || 'null')
+    if(!user) user = _getDemoUser()
+    return user
 }
 
 /* function onUserUpdate(user) {
@@ -162,4 +164,17 @@ function getUserPrefs() {
     const user = getLoggedinUser()
     const KEY = `userPrefs_${user?._id}`
     return JSON.parse(localStorage.getItem(KEY) || '{}')
+}
+
+function _getDemoUser() {
+    return {
+        _id: 'u123456789',
+        username: 'dvirco',
+        // password: 'demo',
+        fullname: 'דביר כהן',
+        // fullnameHe: 'דביר כהן',
+        // fullnameEn: 'Dvir Cohen',
+        imgUrl: null,
+        isAdmin: true,
+    }
 }

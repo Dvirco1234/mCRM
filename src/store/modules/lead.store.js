@@ -23,13 +23,11 @@ export const leadStore = {
             return filterBy
         },
         getBoardScene({ leads }, { getActiveBoardFields }) {
-            console.log('getActiveBoardFields: ', getActiveBoardFields)
             const idxMap = getActiveBoardFields.reduce((acc, field, idx) => ({ ...acc, [field.key]: idx }), {})
-            console.log('idxMap: ', idxMap)
             let scene = JSON.parse(JSON.stringify(getActiveBoardFields))
+            console.log('leads: ', leads);
             leads.map(lead => {
                 const stageIdx = idxMap[lead.status]
-                // if (!scene[stageIdx].children) scene[stageIdx].children = []
                 scene[stageIdx].children.push(lead)
             })
             console.log('scene: ', scene)
@@ -51,7 +49,9 @@ export const leadStore = {
                 const children = stage.children || []
                 return [...acc, ...children]
             }, [])
+            console.log('leads: ', leads);
             state.leads = leads
+            console.log('state.leads: ', state.leads);
         },
         setLeads(state, { leads }) {
             state.leads = leads
@@ -78,10 +78,16 @@ export const leadStore = {
         updateLeads(state, { leads }) {
             state.leads = leads
         },
-        updateLead(state, { id, key, value }) {
-            const lead = state.leads.find(l => l._id === id)
+        // updateLead(state, { id, key, value }) {
+        //     const lead = state.leads.find(l => l._id === id)
+        //     lead[key] = value
+        //     console.log('lead: ', lead)
+        // },
+        updateLead(state, { updatedLead, key, value }) {
+            // const idx = state.leads.findIndex(l => l._id === updatedLead._id)
+            // state.leads.splice(idx, 1, updatedLead)
+            const lead = state.leads.find(l => l._id === updatedLead._id)
             lead[key] = value
-            console.log('lead: ', lead);
         },
     },
     actions: {
@@ -100,28 +106,31 @@ export const leadStore = {
             dispatch({ type: 'loadLeads' })
             // const leads = leadService.loadLeads(filterBy)
         },
-        onLeadCardDrop({ commit, getters }, { columnId, dropResult }) {
+        async onUpdateLead({ commit }, { lead, key, value }) {
+            const leadToUpdate = JSON.parse(JSON.stringify(lead))
+            leadToUpdate[key] = value
+            const updatedLead = await leadService.saveLead(leadToUpdate)
+            commit({ type: 'updateLead', updatedLead, key, value })
+            return updatedLead
+        },
+       async onLeadCardDrop({ commit, getters, dispatch }, { columnId, dropResult }) {
             if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
                 console.log('dropResult: ', dropResult)
                 const scene = JSON.parse(JSON.stringify(getters.getBoardScene))
                 // const colIdx = scene.findIndex(col => col.id === columnId)
                 // const column = scene[colIdx]
                 const column = scene.find(col => col.id === columnId)
-                // console.log('column: ', column);
                 const colIdx = scene.indexOf(column)
-
                 column.children = dndService.applyDrag(column.children, dropResult)
                 scene.splice(colIdx, 1, column)
-                console.log('scene: ', scene);
-
-                commit({ type: 'setLeadsFromBoardScene', scene })
+                console.log('scene: ', scene)
+                // FIXME now it works fine if drag forward' but backwards it  duplicates and not working - this is because it updates in two steps.
+                // FIXME maybe the solution is to hold temporary scene object, update the scene and then update the leads (once - after all other updates.)
                 if (dropResult.addedIndex !== null) {
-                    
-                    // column.children[dropResult.addedIndex].status = column.key
-                    // scene[colIdx].children[dropResult.addedIndex].status = column.key
-                    // commit({ type: 'setLeadsFromBoardScene', scene, colIdx, newIdx: dropResult.addedIndex })
-                    commit({type: 'updateLead', id: dropResult.payload._id, key: 'status', value: column.key})
+                    dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'status', value: column.key })
+                    // commit({type: 'updateLead', id: dropResult.payload._id, key: 'status', value: column.key})
                 }
+                commit({ type: 'setLeadsFromBoardScene', scene })
             }
         },
         // onLeadCardDrop({ commit, getters }, { columnId, dropResult }) {

@@ -1,5 +1,6 @@
 <template>
     <article class="select-wrapper" >
+        <!-- <div class="options-wrapper" v-if="isEditable"> -->
         <div class="options-wrapper">
             <div class="selected" @click="toggleOptions" v-click-outside="closeOptions" :class="{ open: isOptionsShow }">
                 <!-- <span>{{ selectedOption.label }}</span> -->
@@ -15,6 +16,7 @@
                 </div>
             </div>
         </div>
+        <!-- <p v-else class="selected" style="padding-inline: 0;">{{ selectedOption.label }}</p> -->
     </article>
 </template>
   
@@ -36,6 +38,7 @@ export default {
             type: Object,
             default: () => ({ label: 'בחר', key: '' })
         },
+        isEditable: { type: Boolean, default: true },
         // value: {
         //     type: String,
         //     default: ''
@@ -59,7 +62,6 @@ export default {
             this.isOptionsShow = false
         },
         selectOption(option) {
-            console.log('option: ', option);
             this.selectedOption = option
             this.closeOptions()
             this.$emit('update:modelValue', option.key)
@@ -96,7 +98,8 @@ export default {
             justify-content: space-between;
             align-items: center;
             border: 1px solid #ccc;
-            padding: 8px;
+            // padding: 8px;
+            padding: 8px 12px;
             cursor: pointer;
             min-width: 150px;
             border-radius: 4px;
@@ -118,8 +121,11 @@ export default {
             }
             
             .value {
-                color: #002644;
-                font-size: 18px;
+                // color: #002644;
+                // color: rgb(33, 33, 33);
+                color: rgb(35, 31, 32);
+                font-size: 16px;
+                // padding-inline-start: 4px;
                 line-height: 1;
             }
         }
@@ -150,7 +156,8 @@ export default {
             }
 
             .option {
-                padding: 8px;
+                // padding: 8px;
+                padding: 8px 12px;
                 cursor: pointer;
 
                 &:hover {

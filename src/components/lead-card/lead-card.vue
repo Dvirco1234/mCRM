@@ -8,10 +8,10 @@
             </div>
             <div class="actions flex gap-20 cursor-pointer">
                 <svgIcon iconType="mail" className="circle hover lg-bg" title="שלח אימייל" class="mail" />
-                <svgIcon iconType="phone" className="circle hover lg-bg" title="בצע שיחה" class="phone" @click="modals.call = !modals.call"/>
+                <svgIcon iconType="phone" className="circle hover lg-bg" title="בצע שיחה" class="phone" @click="openModal('callModal')" />
                 <svgIcon iconType="whatsapp2" className="circle hover lg-bg" title="שלח ווצאפ" class="whatsapp" />
             </div>
-            <MakeCallModal :lead="lead" @openLog="openModal" @closeCall="closeModal" v-if="modals.call"/>
+            <!-- <MakeCallModal :lead="lead" @openLog="openModal" @closeCall="closeModal" v-if="modals.callModal.isOpen" /> -->
         </header>
         <main class="lead-card-main grid">
             <article class="lead-details card-article">
@@ -20,28 +20,26 @@
                         <svgIcon iconType="expandDown" :className="section.isOpen ? 'fill-secondary' : 'rotate-270 fill-secondary'" />
                         <h3>{{ section.name }}</h3>
                     </div>
-                    <form v-if="section.isOpen" class="form-field flex" v-for="field, idx in section.fields" :key="field.key"
+                    <form v-if="section.isOpen" class="form-field flex" v-for="(field, idx) in section.fields" :key="field.key"
                         @submit.prevent="toggleInputEditable(section.id, idx, field)">
-                        <label class="flex input-label" :class="{ disabled: !field.isEditable, 'cursor-default': field.isImmutable }"
-                            @click="!field.isEditable && !field.isImmutable && toggleInputEditable(section.id, idx, field)">
-                            <span class="label">{{ field.txt }}</span>
-
-                            <!-- <Datepicker v-if="field.isEditable && field.type === 'date'" v-model="lead[field.key]" week-start="0" show-now-button input-class-name="input dp-custom-input" /> -->
-                            <!-- <Datepicker v-if="field.isEditable && field.type === 'date'" v-model="lead[field.key]" week-start="0" show-now-button input-class-name="input dp-custom-input"/>
-                            <input v-else-if="field.type === 'date'" :ref="field.key" class="input" :readonly="!field.isEditable" :value="$filters.formatTime(lead[field.key])" /> -->
+                        <div class="flex field-wrapper" :class="{ disabled: !field.isEditable, 'cursor-default': field.isImmutable }"
+                            @click.stop="!field.isEditable && !field.isImmutable && toggleInputEditable(section.id, idx, field)">
+                            <label :for="field.key" class="label">{{ field.txt }}</label>
                             <p v-if="field.type === 'phone' && !field.isEditable || field.type === 'email' && !field.isEditable"
-                                class="input phone-email" @click.stop="openDialog(field)">{{ lead[field.key] }}</p>
+                                class="phone-email input-p" @click.stop="openDialog(field)">{{ lead[field.key] }}</p>
                             <date-picker v-else-if="field.type === 'date'" :date="lead[field.key]" :isEditable="field.isEditable" :field="field"
-                                @pickDate="updateLeadField" :class="{ 'cursor-default': field.isImmutable }"/>
-                            <span v-else-if="field.key === 'status'">{{ statusTxtMap[lead[field.key]] }}</span>
-                            <input v-else :ref="field.key" class="input" :readonly="!field.isEditable" v-model="lead[field.key]" />
-                            <button v-if="field.isEditable" class="clean-btn icon flex-center">
+                                @pickDate="updateLeadField" :class="{ 'cursor-default': field.isImmutable }" />
+                            <!-- <p v-else-if="field.type === 'select'">{{ statusTxtMap[lead[field.key]] }}</p> -->
+                            <p v-else-if="field.key === 'status' && !field.isEditable" class="input-p">{{ statusTxtMap[lead[field.key]] }}</p>
+                            <selectDropdown v-else-if="field.type === 'select'" class="input" :options="statusTxtMapOptions"
+                                :isEditable="field.isEditable" v-model="lead[field.key]" />
+                            <input v-else :ref="field.key" :id="field.key" class="input" :readonly="!field.isEditable"
+                                v-model="lead[field.key]" />
+                            <button v-show="field.isEditable" class="clean-btn icon flex-center" type="submit">
                                 <svgIcon iconType="done" />
+                                <!-- <svgIcon :iconType="field.isEditable? 'done': 'edit'" /> -->
                             </button>
-                            <!-- <button class="clean-btn icon flex-center" >
-                                <svgIcon :iconType="field.isEditable? 'done': 'edit'" />
-                            </button> -->
-                        </label>
+                        </div>
                     </form>
                 </section>
             </article>
@@ -56,9 +54,30 @@
                         <span>{{ action.txt }}</span>
                     </div>
                 </section>
-                <logModal v-if="modals.log" @closeModal="closeModal" />
+                <!-- <logModal v-if="modals.logModal.isOpen" @closeModal="closeModal" /> -->
+                <DialogModal v-if="currModal" @closeModal="closeModal" @openModal="openModal" :modal="currModal" :lead="lead" />
                 <section class="card-article logs-section">
-                    <div class="log-card">
+                    <div v-if="!lead.logs?.length" class="no-logs"> no logs</div>
+                    <div v-else class="log-card icons" v-for="log in lead.logs" :key="log.desc">
+                        <header class="flex space-between align-center">
+                            <h4 class="flex align-center gap-4"><svgIcon iconType="phone" isSmall className="circle md-bg" class="phone"/>לוג שיחה</h4>
+                            <div class="flex gap-20">
+                                <label>
+                                    אמצעי קשר
+                                    <p>{{ logOptions[log.type] }}</p>
+                                </label>
+                                <label>
+                                    תוצאה
+                                    <p>{{ logOptions[log.result] }}</p>
+                                </label>
+                            </div>
+                        </header>
+                        <div class="desc"><pre>{{ log.description }}</pre></div>
+                        <div class="date-by flex align-center gap-2">
+                            <svgIcon iconType="user" className="circle" isSmall class="user"/>
+                            <span>{{ log.managerName }}</span>
+                            <span class="date">{{ $filters.formatTime(log.createdAt) }}</span>
+                        </div>
 
                     </div>
                 </section>
@@ -72,7 +91,8 @@ import { leadService } from '../../services/lead-service'
 import datePicker from '../utils/date-picker/date-picker.vue'
 // import firstLetter from '../utils/first-letter.vue'
 import logModal from '../log-modal/log-modal.vue'
-import MakeCallModal from '../make-call-modal/make-call-modal.vue'
+// import MakeCallModal from '../make-call-modal/call-modal.vue'
+import DialogModal from '../dialog-modal/dialog-modal.vue'
 
 export default {
     name: 'lead-card',
@@ -85,21 +105,36 @@ export default {
             actions: [
                 { key: 'note', txt: 'הערה', icon: 'editNote' },
                 { key: 'task', txt: 'משימה', icon: 'checkboxChecked' },
-                { key: 'log', txt: 'לוג שיחה', icon: 'phone', action: this.openModal },
+                { key: 'logModal', txt: 'לוג שיחה', icon: 'phone', action: this.openModal },
                 // { key: 'log', txt: 'לוג שיחה', icon: 'phone', action: 'openLogModal' },
             ],
             modals: {
-                log: false,
-                call: false,
-                whatsapp: false,
+                logModal: { type: 'logModal', label: 'לוג שיחה' },
+                callModal: { type: 'callModal', label: `התקשרות עם ליד` },
+                whatsappModal: { type: 'whatsappModal', label: 'שליחת ווצאפ' },
+            },
+            currModal: null,
+            // modals: {
+            //     log: false,
+            //     call: false,
+            //     whatsapp: false,
+            // },
+            //TODO should be in store
+            logOptions: {
+                phone: 'טלפון',
+                whatsapp: 'ווצאפ',
+                email: 'אימייל',
+                followup: 'פולואפ',
             },
         }
     },
     created() {
         this.lead = JSON.parse(JSON.stringify(this.currLead))
+        this.modals.callModal.label = `התקשרות עם ${this.lead?.fullname}`
     },
     mounted() {
         this.sections = JSON.parse(JSON.stringify(this.cardSections))
+        // console.log('this.sections: ', this.sections);
         // console.log('this.$route:', this.$route)
     },
     methods: {
@@ -108,6 +143,7 @@ export default {
             this.$store.commit({ type: 'toggleCardSectionOpen', sectionId })
         },
         toggleInputEditable(sectionId, fieldIdx, field) {
+            if (field.isEditable) this.saveLeadDetails(field)
             this.$store.commit({ type: 'toggleCardInputEditable', sectionId, fieldIdx })
             if (this.$refs[field.key]) {
                 if (field.isEditable) this.$refs[field.key][0].focus()
@@ -135,19 +171,27 @@ export default {
             this.lead[key] = value
         },
         openModal(type = '') {
-            if(!type) return
-            this.modals[type] = true
+            if (!type) return
+            this.currModal = this.modals[type]
+            // this.modals[type] = true
         },
-        closeModal(type = '') {
-            // if(!type) 
-            this.modals[type] = false
+        closeModal() {
+            this.currModal = null
         },
-        openLogModal() {
-            this.isLogModalOpen = true
+        saveLeadDetails(field) {
+            const { key } = field
+            const value = this.lead[key]
+            this.$store.dispatch({ type: 'onUpdateLead', lead: this.lead, key, value })
         },
-        closeLogModal() {
-            this.isLogModalOpen = false
-        },
+        // openModal(type = '') {
+        //     if (!type) return
+        //     this.modals[type].isOpen = true
+        // },
+        // closeModal(type = '') {
+        //     // if(!type) 
+        //     this.modals[type].isOpen = false
+        //     // this.modals[type] = false
+        // },
         // onPickAction(act) {
         //     if(act === 'openLogModal') this.isLogModalOpen = true
         // },
@@ -170,6 +214,13 @@ export default {
         statusTxtMap() {
             return this.$store.getters.getStatusTxtMap
         },
+        statusTxtMapOptions() {
+            const statusMap = []
+            for (const key in this.statusTxtMap) {
+                statusMap.push({ key, label: this.statusTxtMap[key] })
+            }
+            return statusMap
+        },
         // getColor() {
         //     return "hsl(" + 360 * Math.random() + ',' +
         //         (25 + 70 * Math.random()) + '%,' +
@@ -178,12 +229,10 @@ export default {
     },
     unmounted() { },
     components: {
-    // SvgIcon,
-    datePicker,
-    // firstLetter,
-    logModal,
-    MakeCallModal
-},
+        datePicker,
+        logModal,
+        DialogModal
+    },
     watch: {
         '$route.params.id': {
             async handler() {
