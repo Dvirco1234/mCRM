@@ -8,6 +8,11 @@ export const leadStore = {
         // newLeads: null,
         boardScene: null,
         filterBy: null,
+        // TODO should come from database
+        introInfo: {
+            date: '03/04',
+            nextDate: '11/04',
+        },
     },
     getters: {
         getLeads({ leads }) {

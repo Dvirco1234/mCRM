@@ -40,6 +40,10 @@
 .dialog-form {
     height: 515px;
 
+    pre {
+        white-space: pre-wrap;
+    }
+
     .followup-date {
         margin-bottom: em(16px);
 

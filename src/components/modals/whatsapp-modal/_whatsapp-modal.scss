@@ -1,0 +1,17 @@
+.dialog-form {
+    // .field {
+    // }
+
+    .msg-wrapper {
+        flex: 1;
+        .msg {
+            min-height: 61px !important;
+            max-height: 86%;
+            overflow-y: auto;
+
+            &:focus {
+                outline: 1px solid #0081c9;
+            }
+        }
+    }
+}

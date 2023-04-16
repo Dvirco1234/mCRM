@@ -6,6 +6,9 @@ export const userStore = {
         // userPrefs: null,
     },
     getters: {
+        getLoggedinUser({ loggedinUser }) {
+            return loggedinUser
+        },
         // getUserPrefs(state) {
         //     return state.userPrefs
         // }

@@ -10,6 +10,8 @@
                 <datePicker :isEditable="true" :field="{ key: 'nextContactDate', isImmutable: false }" @pickDate="updateLeadField" />
             </div>
         </template>
+        <label for="status">סטטוס</label>
+        <selectDropdown class="form-field" :options="statusTxtMapOptions" v-model="logInfo.status" />
         <div class="desc-wrapper">
             <label for="desc">תיאור</label>
             <pre class="form-field field desc" id="desc" contenteditable ref="pre" @blur="onInputDesc">{{ logInfo.description }}</pre>
@@ -21,19 +23,27 @@
     </form>
 </template>
 <script>
-import datePicker from '../utils/date-picker/date-picker.vue'
+import datePicker from '../../utils/date-picker/date-picker.vue'
 
 export default {
     name: 'log-modal',
     props: {
-        logInfo: {
-            type: Object,
-            default: {
-                type: 'phone',
-                result: 'followup',
-                description: '',
-            }
+        // logInfo: {
+        //     type: Object,
+        //     default: {
+        //         type: 'phone',
+        //         result: 'followup',
+        //         description: '',
+        //     }
+        // },
+        logType: {
+            type: String,
+            default: '',
         },
+        logDesc: {
+            type: String,
+            default: '',
+        }
     },
     data() {
         return {
@@ -48,18 +58,25 @@ export default {
                     { key: 'followup', label: 'פולואפ' },
                 ],
             },
-            logInfo: {
-                type: 'phone',
-                result: 'followup',
-                description: '',
-            },
+            logInfo: null,
+            // logInfo: {
+            //     type: 'phone',
+            //     result: 'phone',
+            //     description: '',
+            // },
         }
     },
-    created() { },
+    created() {
+        this.initLogInfo()
+    },
     methods: {
         saveLog() {
             this.logInfo.description = this.$refs.pre.innerText
-            console.log('this.logInfo: ', this.logInfo)
+            this.logInfo.managerName = this.$store.getters.getLoggedinUser.fullname
+            this.logInfo.createdAt = Date.now()
+            this.$emit('saveLog', { ...this.logInfo })
+            this.closeModal()
+            this.initLogInfo()
         },
         closeModal() {
             // if(this.isMinimized) return
@@ -74,9 +91,29 @@ export default {
             // this.logInfo.type = value
             // console.log('Selected value:', value)
             console.log('Selected value:', this.logInfo.type)
-        }
+        },
+        initLogInfo() {
+            this.logInfo = {
+                type: this.logType || 'phone',
+                // type: this.logType,
+                result: 'phone',
+                status: 'beforeIntro',
+                description: this.logDesc,
+            }
+        },
     },
-    computed: {},
+    computed: {
+        statusTxtMap() {
+            return this.$store.getters.getStatusTxtMap
+        },
+        statusTxtMapOptions() {
+            const statusMap = []
+            for (const key in this.statusTxtMap) {
+                statusMap.push({ key, label: this.statusTxtMap[key] })
+            }
+            return statusMap
+        },
+    },
     unmounted() { },
     components: {
         datePicker,

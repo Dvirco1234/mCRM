@@ -172,6 +172,8 @@ function _getDemoUser() {
         username: 'dvirco',
         // password: 'demo',
         fullname: 'דביר כהן',
+        firstName: 'דביר',
+        lastName: 'כהן',
         // fullnameHe: 'דביר כהן',
         // fullnameEn: 'Dvir Cohen',
         imgUrl: null,

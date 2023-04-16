@@ -359,6 +359,7 @@ function _createLeads() {
                     },
                     {
                         createdAt: 1672486130084,
+                        editedAt: 1672488130084,
                         managerName: 'דביר כהן',
                         type: 'phone',
                         result: 'phone',
@@ -382,6 +383,38 @@ function _createLeads() {
                 lastContactAt: 1672581130084,
                 nextContactDate: 1677470400000,
                 nextContactTime: 'morning',
+                logs: [
+                    {
+                        "type": "phone",
+                        "result": "phone",
+                        "description": "ניסיון אחרון בהחלט",
+                        "managerName": "דביר כהן",
+                        "createdAt": 1679483260795
+                    },
+                    {
+                        "type": "phone",
+                        "result": "followup",
+                        "description": "עוד ניסיון עם פולואפ",
+                        "managerName": "דביר כהן",
+                        "createdAt": 1679478043012
+                    },
+                    {
+                        "createdAt": 1672486130084,
+                        "managerName": "דביר כהן",
+                        "type": "phone",
+                        "result": "phone",
+                        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ipsam molestias eaque odit provident dolorem tempora modi facere. Minima, dicta."
+                    },
+                    {
+                        "createdAt": 1672486130084,
+                        "editedAt": 1672488130084,
+                        "managerName": "דביר כהן",
+                        "type": "phone",
+                        "result": "phone",
+                        status: 'interview',
+                        "description": "ביקש שאחזור אליו עוד עשר דקות"
+                    }
+                ],
             },
             {
                 _id: '7GRnvkOwl1',

@@ -7,9 +7,9 @@
                 <h2>{{ lead.fullname }}</h2>
             </div>
             <div class="actions flex gap-20 cursor-pointer">
-                <svgIcon iconType="mail" className="circle hover lg-bg" title="שלח אימייל" class="mail" />
+                <svgIcon iconType="email" className="circle hover lg-bg" title="שלח אימייל" class="email" @click="openModal('emailModal')" />
                 <svgIcon iconType="phone" className="circle hover lg-bg" title="בצע שיחה" class="phone" @click="openModal('callModal')" />
-                <svgIcon iconType="whatsapp2" className="circle hover lg-bg" title="שלח ווצאפ" class="whatsapp" />
+                <svgIcon iconType="whatsapp" className="circle hover lg-bg" title="שלח ווצאפ" class="whatsapp" @click="openModal('whatsappModal')" />
             </div>
             <!-- <MakeCallModal :lead="lead" @openLog="openModal" @closeCall="closeModal" v-if="modals.callModal.isOpen" /> -->
         </header>
@@ -55,12 +55,12 @@
                     </div>
                 </section>
                 <!-- <logModal v-if="modals.logModal.isOpen" @closeModal="closeModal" /> -->
-                <DialogModal v-if="currModal" @closeModal="closeModal" @openModal="openModal" :modal="currModal" :lead="lead" />
+                <DialogModal v-if="currModal" @closeModal="closeModal" @openModal="openModal" :modal="currModal" :lead="lead" @saveLog="addLog"/>
                 <section class="card-article logs-section">
                     <div v-if="!lead.logs?.length" class="no-logs"> no logs</div>
                     <div v-else class="log-card icons" v-for="log in lead.logs" :key="log.desc">
                         <header class="flex space-between align-center">
-                            <h4 class="flex align-center gap-4"><svgIcon iconType="phone" isSmall className="circle md-bg" class="phone"/>לוג שיחה</h4>
+                            <h4 class="flex align-center gap-4"><svgIcon :iconType="log.type" isSmall className="circle md-bg" :class="log.type"/>לוג שיחה</h4>
                             <div class="flex gap-20">
                                 <label>
                                     אמצעי קשר
@@ -70,6 +70,10 @@
                                     תוצאה
                                     <p>{{ logOptions[log.result] }}</p>
                                 </label>
+                                <label>
+                                    סטטוס
+                                    <p>{{ statusTxtMap[log.status] }}</p>
+                                </label>
                             </div>
                         </header>
                         <div class="desc"><pre>{{ log.description }}</pre></div>
@@ -77,6 +81,7 @@
                             <svgIcon iconType="user" className="circle" isSmall class="user"/>
                             <span>{{ log.managerName }}</span>
                             <span class="date">{{ $filters.formatTime(log.createdAt) }}</span>
+                            <span v-if="log.editedAt" class="date">עודכן: {{ $filters.formatTime(log.editedAt) }}</span>
                         </div>
 
                     </div>
@@ -90,9 +95,9 @@
 import { leadService } from '../../services/lead-service'
 import datePicker from '../utils/date-picker/date-picker.vue'
 // import firstLetter from '../utils/first-letter.vue'
-import logModal from '../log-modal/log-modal.vue'
+// import logModal from '../log-modal/log-modal.vue'
 // import MakeCallModal from '../make-call-modal/call-modal.vue'
-import DialogModal from '../dialog-modal/dialog-modal.vue'
+import DialogModal from '../modals/dialog-modal/dialog-modal.vue'
 
 export default {
     name: 'lead-card',
@@ -112,6 +117,7 @@ export default {
                 logModal: { type: 'logModal', label: 'לוג שיחה' },
                 callModal: { type: 'callModal', label: `התקשרות עם ליד` },
                 whatsappModal: { type: 'whatsappModal', label: 'שליחת ווצאפ' },
+                emailModal: { type: 'emailModal', label: 'שליחת אימייל' },
             },
             currModal: null,
             // modals: {
@@ -129,7 +135,7 @@ export default {
         }
     },
     created() {
-        this.lead = JSON.parse(JSON.stringify(this.currLead))
+        // this.lead = JSON.parse(JSON.stringify(this.currLead))
         this.modals.callModal.label = `התקשרות עם ${this.lead?.fullname}`
     },
     mounted() {
@@ -183,6 +189,12 @@ export default {
             const value = this.lead[key]
             this.$store.dispatch({ type: 'onUpdateLead', lead: this.lead, key, value })
         },
+        addLog(logInfo) {
+            console.log('logInfo: ', logInfo);
+            this.lead.logs.unshift(logInfo)
+            const value = JSON.parse(JSON.stringify(this.lead.logs))
+            this.$store.dispatch({ type: 'onUpdateLead', lead: this.lead, key: 'logs', value })
+        }
         // openModal(type = '') {
         //     if (!type) return
         //     this.modals[type].isOpen = true
@@ -230,7 +242,7 @@ export default {
     unmounted() { },
     components: {
         datePicker,
-        logModal,
+        // logModal,
         DialogModal
     },
     watch: {
@@ -240,7 +252,8 @@ export default {
                 if (!id) return
                 const lead = await leadService.getLeadById(id)
                 console.log('lead: ', lead)
-                this.lead = lead
+                this.lead = JSON.parse(JSON.stringify(lead))
+                // this.lead = lead
             },
             immediate: true,
         },
