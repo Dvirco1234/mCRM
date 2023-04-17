@@ -237,7 +237,8 @@ function getLeadCardSections() {
             fields: [
                 { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone' },
                 { key: 'email', txt: 'אימייל', isActive: true, isEditable: false, type: 'email' },
-                { key: 'leadManager', txt: 'מנהל לקוח', isActive: true },
+                { key: 'managerName', txt: 'מנהל לקוח', isActive: true },
+                // { key: 'leadManager', txt: 'מנהל לקוח', isActive: true },
                 { key: 'message', txt: 'הודעה', isActive: true, isEditable: false },
                 // { key: 'contactLog', txt: 'לוג שיחה', isActive: true, isEditable: false },
                 { key: 'stopper', txt: 'חסם פוטנציאלי', isActive: true, isEditable: false },

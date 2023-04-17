@@ -39,14 +39,27 @@ export const leadStore = {
         getCurrScene({ boardScene }) {
             return boardScene
         },
+        // getBoardScene({ leads }, { getActiveBoardFields }) {
+        //     const idxMap = getActiveBoardFields.reduce((acc, field, idx) => ({ ...acc, [field.key]: idx }), {})
+        //     let scene = JSON.parse(JSON.stringify(getActiveBoardFields))
+        //     console.log('leads: ', leads);
+        //     leads.map(lead => {
+        //         const stageIdx = idxMap[lead.status]
+        //         scene[stageIdx].children.push(lead)
+        //     })
+        //     console.log('scene: ', scene)
+        //     return scene
+        // },
     },
     mutations: {
-        setLeadsFromBoardScene(state) {
-            const leads = state.boardScene.reduce((acc, stage) => {
+        setLeadsFromBoardScene(state, { scene }) {
+            const leads = scene.reduce((acc, stage) => {
                 const children = stage.children || []
                 return [...acc, ...children]
             }, [])
+            console.log('leads: ', leads);
             state.leads = leads
+            console.log('state.leads: ', state.leads);
         },
         setBoardScene(state, { boardFields = null }) {
             if (state.boardScene) return
@@ -54,6 +67,7 @@ export const leadStore = {
                 state.boardScene = null
                 return
             }
+            console.log('boardFields: ', boardFields);
             const idxMap = boardFields.reduce((acc, field, idx) => ({ ...acc, [field.key]: idx }), {})
             let scene = JSON.parse(JSON.stringify(boardFields))
             state.leads.map(lead => {
@@ -80,6 +94,13 @@ export const leadStore = {
             state.filterBy = { ...state.filterBy, ...filterBy }
             if (state.filterBy?.all) state.filterBy = null
         },
+        // setBoardScene(state, { leads }) {
+        //     state.boardScene = getActiveBoardFields.map(stage => {
+        //         const currStage = { ...stage }
+        //         currStage.children = state.leads.filter(lead => lead.status === stage.key)
+        //         return currStage
+        //     })
+        // },
         updateLeads(state, { leads }) {
             state.leads = leads
         },
@@ -118,29 +139,61 @@ export const leadStore = {
             commit({ type: 'updateLead', updatedLead, key, value })
             return updatedLead
         },
-        async onLeadCardDrop({ commit, getters, dispatch }, { columnId, dropResult }) {
+    //    async onLeadCardDrop({ commit, getters, dispatch }, { columnId, dropResult }) {
+    //         if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+    //             console.log('dropResult: ', dropResult)
+    //             const scene = JSON.parse(JSON.stringify(getters.getBoardScene))
+    //             // const colIdx = scene.findIndex(col => col.id === columnId)
+    //             // const column = scene[colIdx]
+    //             const column = scene.find(col => col.id === columnId)
+    //             const colIdx = scene.indexOf(column)
+    //             column.children = dndService.applyDrag(column.children, dropResult)
+    //             scene.splice(colIdx, 1, column)
+    //             console.log('scene: ', scene)
+    //             // FIXME now it works fine if drag forward' but backwards it  duplicates and not working - this is because it updates in two steps.
+    //             // FIXME maybe the solution is to hold temporary scene object, update the scene and then update the leads (once - after all other updates.)
+    //             if (dropResult.addedIndex !== null) {
+    //                 dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'status', value: column.key })
+    //                 // commit({type: 'updateLead', id: dropResult.payload._id, key: 'status', value: column.key})
+    //             }
+    //             commit({ type: 'setLeadsFromBoardScene', scene })
+    //         }
+    //     },
+       async onLeadCardDrop({ commit, getters, dispatch }, { columnId, dropResult }) {
             if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
                 console.log('dropResult: ', dropResult)
                 commit({ type: 'setBoardScene', boardFields: getters.getActiveBoardFields })
-
+                // commit({ type: 'setBoardScene' })
                 const scene = JSON.parse(JSON.stringify(getters.getCurrScene))
                 const column = scene.find(col => col.id === columnId)
                 const colIdx = scene.indexOf(column)
                 column.children = dndService.applyDrag(column.children, dropResult)
-                console.log('column.children: ', column.children);
                 scene.splice(colIdx, 1, column)
-                console.log('scene: ', scene);
                 
                 commit({ type: 'setCurrScene', scene })
                 
                 if (dropResult.addedIndex !== null) {
                     dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'status', value: column.key })
-                    if (column.key === 'new') dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'managerName', value: '' })
-                    else dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'managerName', value: getters.getLoggedinUser.fullname })
+                    commit({ type: 'setLeadsFromBoardScene', scene })
+                    commit({ type: 'setBoardScene' })
                 }
-                commit({ type: 'setLeadsFromBoardScene' })
-                commit({ type: 'setBoardScene' })
             }
         },
+        // onLeadCardDrop({ commit, getters }, { columnId, dropResult }) {
+        //     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+        //         const scene = JSON.parse(JSON.stringify(getters.getContacts))
+        //         const column = scene.stages.find(p => p.id === columnId)
+        //         const columnIndex = scene.stages.indexOf(column)
+
+        //         column.children = dndService.applyDrag(column.children, dropResult)
+        //         scene.stages.splice(columnIndex, 1, column)
+
+        //         commit({ type: 'setContacts', scene })
+        //     }
+        // },
+        // async setFilter({ commit, state }, { filterBy }) {
+        //     const leads = leadService.loadLeads(filterBy)
+        //     commit({ type: 'setToys', toys })
+        // },
     },
 }
