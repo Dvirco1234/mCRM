@@ -191,10 +191,12 @@ function getBoardFields() {
         { id: 'bf102', key: 'beforeIntro', txt: 'לפני ע"פ', isActive: true, children: [] },
         { id: 'bf103', key: 'intro', txt: 'ערב פתוח', isActive: true, children: [] },
         { id: 'bf104', key: 'afterIntro', txt: 'אחרי ע"פ', isActive: true, children: [] },
-        { id: 'bf105', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: true, children: [] },
-        { id: 'bf106', key: 'interview', txt: 'בתהליך ראיון', isActive: true, children: [] },
-        { id: 'bf107', key: 'done', txt: 'רשומים', isActive: true, children: [] },
-        { id: 'bf108', key: 'close', txt: 'סגורים', isActive: true, children: [] },
+        { id: 'bf105', key: 'challenge', txt: 'אתגר', isActive: true, children: [] },
+        { id: 'bf106', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: true, children: [] },
+        { id: 'bf107', key: 'interview', txt: 'בתהליך ראיון', isActive: true, children: [] },
+        { id: 'bf108', key: 'done', txt: 'רשומים', isActive: true, children: [] },
+        { id: 'bf109', key: 'future', txt: 'אולי בעתיד', isActive: true, children: [] },
+        { id: 'bf110', key: 'close', txt: 'סגורים', isActive: true, children: [] },
     ]
 }
 
@@ -237,7 +239,7 @@ function getLeadCardSections() {
             fields: [
                 { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone' },
                 { key: 'email', txt: 'אימייל', isActive: true, isEditable: false, type: 'email' },
-                { key: 'managerName', txt: 'מנהל לקוח', isActive: true },
+                { key: 'manager', txt: 'מנהל לקוח', isActive: true },
                 // { key: 'leadManager', txt: 'מנהל לקוח', isActive: true },
                 { key: 'message', txt: 'הודעה', isActive: true, isEditable: false },
                 // { key: 'contactLog', txt: 'לוג שיחה', isActive: true, isEditable: false },
@@ -280,9 +282,11 @@ function getCurrFilterViews(view) {
                         isActive: false,
                         details: { date: '', didCome: true, gotChallenge: true },
                     },
+                    { filterKey: 'status', key: 'challenge', txt: 'אתגר', isActive: false, details: '' },
                     { filterKey: 'status', key: 'interviewScheduled', txt: 'נקבע ראיון', isActive: false, details: '' },
                     { filterKey: 'status', key: 'interview', txt: 'בתהליך ראיון', isActive: false },
                     { filterKey: 'status', key: 'done', txt: 'רשומים', isActive: false },
+                    { filterKey: 'status', key: 'future', txt: 'אולי בעתיד', isActive: false, details: '' },
                     { filterKey: 'status', key: 'close', txt: 'סגורים', isActive: false, details: '' },
                 ],
             },
@@ -353,7 +357,7 @@ function _createLeads() {
                 logs: [
                     {
                         createdAt: 1672486130084,
-                        managerName: 'דביר כהן',
+                        manager: 'דביר כהן',
                         type: 'phone',
                         result: 'phone',
                         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ipsam molestias eaque odit provident dolorem tempora modi facere. Minima, dicta.',
@@ -361,7 +365,7 @@ function _createLeads() {
                     {
                         createdAt: 1672486130084,
                         editedAt: 1672488130084,
-                        managerName: 'דביר כהן',
+                        manager: 'דביר כהן',
                         type: 'phone',
                         result: 'phone',
                         description: 'ביקש שאחזור אליו עוד עשר דקות',
@@ -389,19 +393,19 @@ function _createLeads() {
                         "type": "phone",
                         "result": "phone",
                         "description": "ניסיון אחרון בהחלט",
-                        "managerName": "דביר כהן",
+                        "manager": "דביר כהן",
                         "createdAt": 1679483260795
                     },
                     {
                         "type": "phone",
                         "result": "followup",
                         "description": "עוד ניסיון עם פולואפ",
-                        "managerName": "דביר כהן",
+                        "manager": "דביר כהן",
                         "createdAt": 1679478043012
                     },
                     {
                         "createdAt": 1672486130084,
-                        "managerName": "דביר כהן",
+                        "manager": "דביר כהן",
                         "type": "phone",
                         "result": "phone",
                         "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ipsam molestias eaque odit provident dolorem tempora modi facere. Minima, dicta."
@@ -409,7 +413,7 @@ function _createLeads() {
                     {
                         "createdAt": 1672486130084,
                         "editedAt": 1672488130084,
-                        "managerName": "דביר כהן",
+                        "manager": "דביר כהן",
                         "type": "phone",
                         "result": "phone",
                         status: 'interview',

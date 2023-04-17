@@ -52,6 +52,7 @@ export default {
                     { key: 'phone', label: 'טלפון' },
                     { key: 'whatsapp', label: 'ווצאפ' },
                     { key: 'email', label: 'אימייל' },
+                    { key: 'sms', label: 'סמס' },
                 ],
                 results: [
                     { key: 'phone', label: 'שיחה' },
@@ -72,7 +73,7 @@ export default {
     methods: {
         saveLog() {
             this.logInfo.description = this.$refs.pre.innerText
-            this.logInfo.managerName = this.$store.getters.getLoggedinUser.fullname
+            this.logInfo.manager = this.$store.getters.getLoggedinUser.fullname
             this.logInfo.createdAt = Date.now()
             this.$emit('saveLog', { ...this.logInfo })
             this.closeModal()

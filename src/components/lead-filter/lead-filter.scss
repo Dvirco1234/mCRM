@@ -7,6 +7,10 @@
     border-inline-end: 1px solid $border-light;
     // box-shadow: inset 1px 0 0 $border-light;
     overflow-y: auto;
+    
+    .filter {
+        overflow-y: auto;
+    }
 
     .filter, .lead-list {
         height: 100%;

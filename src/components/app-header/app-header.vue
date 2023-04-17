@@ -1,25 +1,32 @@
 <template>
     <section class="app-header main-layout full">
-        <header class="flex align-center">
-            <div class="logo flex align-center">
-                <img class="logo-img"
-                    src="https://res.cloudinary.com/dvirco123/image/upload/v1673431899/MisterBit%20CRM/logo-misterbit_xfwtq8.png"
-                    alt="MisterBit CRM" @click="$router.push('/')">
-                <!-- <h2 class="fs28">CRM</h2> -->
-            </div>
+        <header class="flex align-center space-between">
+            <nav class="flex align-center">
+                <div class="logo flex align-center">
+                    <img class="logo-img"
+                        src="https://res.cloudinary.com/dvirco123/image/upload/v1673431899/MisterBit%20CRM/logo-misterbit_xfwtq8.png"
+                        alt="MisterBit CRM" @click="$router.push('/')">
+                    <!-- <h2 class="fs28">CRM</h2> -->
+                </div>
 
-            <ul class="nav-links flex space-between clean-list ">
-                <li v-for="route in routes" :key="route.txt">
-                    <router-link class="nav-link" :to="route.path">{{ route.txt }}</router-link>
-                </li>
-            </ul>
+                <ul class="nav-links flex space-between clean-list ">
+                    <li v-for="route in routes" :key="route.txt">
+                        <router-link class="nav-link" :to="route.path">{{ route.txt }}</router-link>
+                    </li>
+                </ul>
+            </nav>
+            <section class="user-actions flex align-center gap-10">
+                <svgIcon iconType="notifications" className="circle hover lg-bg fill" />
+                <svgIcon iconType="schedule" className="circle hover lg-bg fill" />
+                <svgIcon iconType="user" className="circle lg-icon lg-bg fill" />
+            </section>
         </header>
     </section>
 </template>
 
 <script>
 export default {
-    name: '',
+    name: 'AppHeader',
     props: { type: Object },
     data() {
         return {

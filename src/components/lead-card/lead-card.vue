@@ -79,7 +79,7 @@
                         <div class="desc"><pre>{{ log.description }}</pre></div>
                         <div class="date-by flex align-center gap-2">
                             <svgIcon iconType="user" className="circle" isSmall class="user"/>
-                            <span>{{ log.managerName }}</span>
+                            <span>{{ log.manager }}</span>
                             <span class="date">{{ $filters.formatTime(log.createdAt) }}</span>
                             <span v-if="log.editedAt" class="date">עודכן: {{ $filters.formatTime(log.editedAt) }}</span>
                         </div>

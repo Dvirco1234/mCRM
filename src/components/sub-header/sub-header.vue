@@ -14,9 +14,9 @@
             </div>
         </section>
         <section class="filter-sort flex align-center row-reverse">
-            <div class="btn">
+            <!-- <div class="btn">
                 <span>חדש</span>
-            </div>
+            </div> -->
             <div class="btn flex">
                 <svgIcon iconType="filter" class="svg-btn" />
                 <span>פילטר</span>
@@ -30,7 +30,7 @@
                 <span>מיון</span>
             </div>
             <div class="search position-relative" :class="{ close: !isSearchOpen }" v-click-outside="closeSearchInput">
-                <svgIcon :iconType="filterByTxt ? 'x' : 'search'" :isSmall="true" className="circle" class="icon position-absolute"
+                <svgIcon :iconType="filterByTxt ? 'x' : 'search'" :isSmall="true" className="circle" class="icon position-absolute md-bg"
                     @click="toggleSearchInput" />
                 <input ref="searchInput" type="search" class="clean-input" :class="{ close: !isSearchOpen }" :readonly="!isSearchOpen"
                     v-model="filterByTxt" :placeholder="isSearchOpen ? 'חיפוש לידים' : ''" @input="searchLeads">

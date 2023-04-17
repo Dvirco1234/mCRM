@@ -135,8 +135,8 @@ export const leadStore = {
                 
                 if (dropResult.addedIndex !== null) {
                     dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'status', value: column.key })
-                    if (column.key === 'new') dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'managerName', value: '' })
-                    else dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'managerName', value: getters.getLoggedinUser.fullname })
+                    if (column.key === 'new') dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'manager', value: '' })
+                    else dispatch({ type: 'onUpdateLead', lead: dropResult.payload, key: 'manager', value: getters.getLoggedinUser.fullname })
                 }
                 commit({ type: 'setLeadsFromBoardScene' })
                 commit({ type: 'setBoardScene' })
