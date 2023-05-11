@@ -1,0 +1,42 @@
+label {
+    font-size: em(12px);
+    color: $txt-light-darker1;
+    p {
+        font-size: em(19px);
+        color: $txt-dark-darker;
+    }
+}
+
+.desc {
+    width: 100%;
+    pre {
+        width: 100%;
+        white-space: pre-wrap;
+        font-family: Arimo, sans-serif;
+        padding: 12px 0;
+        outline: none;
+
+        &.editing {
+            border-radius: 4px;
+            padding: 6px 12px;
+            margin: 5.2px 0;
+            background-color: #fff;
+            // border: 1px solid #c2c8cc;
+            border: 1px solid #0081c9;
+
+            // &:focus-visible {
+            //     border-color: #0081c9;
+            // }
+        }
+    }
+}
+
+.date-by {
+    color: $txt-light-darker1;
+    font-size: em(12px);
+
+    .date {
+        color: $txt-light-darker;
+        margin-inline-start: 10px;
+    }
+}

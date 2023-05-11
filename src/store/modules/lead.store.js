@@ -90,6 +90,7 @@ export const leadStore = {
         // },
         updateLead(state, { updatedLead, key, value }) {
             // const idx = state.leads.findIndex(l => l._id === updatedLead._id)
+            // state.leads[idx][key] = value
             // state.leads.splice(idx, 1, updatedLead)
             const lead = state.leads.find(l => l._id === updatedLead._id)
             lead[key] = value
@@ -116,6 +117,11 @@ export const leadStore = {
             leadToUpdate[key] = value
             const updatedLead = await leadService.saveLead(leadToUpdate)
             commit({ type: 'updateLead', updatedLead, key, value })
+            return updatedLead
+        },
+        async saveLog({ commit, dispatch }, { leadId, log }) {
+            const updatedLead = await leadService.saveLog(leadId, log)
+            commit({ type: 'updateLead', updatedLead, key: 'logs', value: JSON.parse(JSON.stringify(updatedLead.logs)) })
             return updatedLead
         },
         async onLeadCardDrop({ commit, getters, dispatch }, { columnId, dropResult }) {

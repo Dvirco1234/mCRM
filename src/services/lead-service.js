@@ -20,6 +20,7 @@ export const leadService = {
     getLeadCardSections,
     // setUserPrefFields,
     getCurrFilterViews,
+    saveLog,
 }
 
 // function query() {
@@ -45,6 +46,18 @@ async function getLeadById(id) {
 async function saveLead(lead) {
     if (lead._id) return await asyncStorageService.put(LEADS_KEY, lead)
     else return await asyncStorageService.post(LEADS_KEY, lead)
+}
+
+async function saveLog(leadId, log) {
+    const lead = await getLeadById(leadId)
+    if (log.id) {
+        const idx = lead.logs.findIndex(l => l.id === log.id)
+        lead.logs.splice(idx, 1, log)
+    } else {
+        log.id = utilService.makeId()
+        lead.logs.unshift(log)
+    }
+    return await saveLead(lead)
 }
 
 function getNewLeads() {
@@ -176,7 +189,7 @@ function getTableFields() {
         { id: 'tf111', key: 'message', txt: 'הודעה', isActive: true },
         { id: 'tf112', key: 'contactLog', txt: 'לוג שיחה', isActive: true },
         { id: 'tf113', key: 'source', txt: 'מקור', isActive: false },
-        { id: 'tf114', key: 'stopper', txt: 'חסם פוטנציאלי', isActive: false },
+        { id: 'tf114', key: 'blocker', txt: 'חסם פוטנציאלי', isActive: false },
         { id: 'tf115', key: 'lastContactMethod', txt: 'אמצעי קשר אחרון', isActive: false },
         { id: 'tf116', key: 'lastContactBy', txt: 'מי תקשר אחרון', isActive: false },
         { id: 'tf117', key: 'lastContactAt', txt: 'תאריך תקשורת אחרון', isActive: false, isDate: true },
@@ -243,7 +256,7 @@ function getLeadCardSections() {
                 // { key: 'leadManager', txt: 'מנהל לקוח', isActive: true },
                 { key: 'message', txt: 'הודעה', isActive: true, isEditable: false },
                 // { key: 'contactLog', txt: 'לוג שיחה', isActive: true, isEditable: false },
-                { key: 'stopper', txt: 'חסם פוטנציאלי', isActive: true, isEditable: false },
+                { key: 'blocker', txt: 'חסם פוטנציאלי', isActive: true, isEditable: false },
                 { key: 'lastContactMethod', txt: 'אמצעי קשר אחרון', isActive: true, isEditable: false },
                 { key: 'lastContactBy', txt: 'מי תקשר אחרון', isActive: true, isEditable: false },
                 { key: 'lastContactAt', txt: 'תאריך תקשורת אחרון', isActive: true, isEditable: false, type: 'date' },

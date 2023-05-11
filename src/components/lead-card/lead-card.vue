@@ -9,7 +9,8 @@
             <div class="actions flex gap-20 cursor-pointer">
                 <svgIcon iconType="email" className="circle hover lg-bg" title="שלח אימייל" class="email" @click="openModal('emailModal')" />
                 <svgIcon iconType="phone" className="circle hover lg-bg" title="בצע שיחה" class="phone" @click="openModal('callModal')" />
-                <svgIcon iconType="whatsapp" className="circle hover lg-bg" title="שלח ווצאפ" class="whatsapp" @click="openModal('whatsappModal')" />
+                <svgIcon iconType="whatsapp" className="circle hover lg-bg" title="שלח ווצאפ" class="whatsapp"
+                    @click="openModal('whatsappModal')" />
             </div>
             <!-- <MakeCallModal :lead="lead" @openLog="openModal" @closeCall="closeModal" v-if="modals.callModal.isOpen" /> -->
         </header>
@@ -55,11 +56,13 @@
                     </div>
                 </section>
                 <!-- <logModal v-if="modals.logModal.isOpen" @closeModal="closeModal" /> -->
-                <DialogModal v-if="currModal" @closeModal="closeModal" @openModal="openModal" :modal="currModal" :lead="lead" @saveLog="addLog"/>
+                <DialogModal v-if="currModal" @closeModal="closeModal" @openModal="openModal" :modal="currModal" :lead="lead" @saveLog="saveLog"
+                    @updateLead="updateLead" />
                 <section class="card-article logs-section">
                     <div v-if="!lead.logs?.length" class="no-logs"> no logs</div>
                     <div v-else class="log-card icons" v-for="log in lead.logs" :key="log.desc">
-                        <header class="flex space-between align-center">
+                        <LogPreview :log="log" @saveLog="saveLog" />
+                        <!-- <header class="flex space-between align-center">
                             <h4 class="flex align-center gap-4"><svgIcon :iconType="log.type" isSmall className="circle md-bg" :class="log.type"/>לוג שיחה</h4>
                             <div class="flex gap-20">
                                 <label>
@@ -76,14 +79,13 @@
                                 </label>
                             </div>
                         </header>
-                        <div class="desc"><pre>{{ log.description }}</pre></div>
+                        <div class="desc"><pre ref="pre" :contenteditable="isEdit" :class="{ editing: isEdit }">{{ log.description }}</pre></div>
                         <div class="date-by flex align-center gap-2">
                             <svgIcon iconType="user" className="circle" isSmall class="user"/>
                             <span>{{ log.manager }}</span>
                             <span class="date">{{ $filters.formatTime(log.createdAt) }}</span>
                             <span v-if="log.editedAt" class="date">עודכן: {{ $filters.formatTime(log.editedAt) }}</span>
-                        </div>
-
+                        </div> -->
                     </div>
                 </section>
             </article>
@@ -98,6 +100,7 @@ import datePicker from '../utils/date-picker/date-picker.vue'
 // import logModal from '../log-modal/log-modal.vue'
 // import MakeCallModal from '../make-call-modal/call-modal.vue'
 import DialogModal from '../modals/dialog-modal/dialog-modal.vue'
+import LogPreview from '../log-preview/LogPreview.vue'
 
 export default {
     name: 'lead-card',
@@ -140,30 +143,22 @@ export default {
     },
     mounted() {
         this.sections = JSON.parse(JSON.stringify(this.cardSections))
-        // console.log('this.sections: ', this.sections);
-        // console.log('this.$route:', this.$route)
     },
     methods: {
         toggleSectionOpen(sectionId) {
-            // console.log('sectionId: ', sectionId)
             this.$store.commit({ type: 'toggleCardSectionOpen', sectionId })
         },
         toggleInputEditable(sectionId, fieldIdx, field) {
-            if (field.isEditable) this.saveLeadDetails(field)
+            const { key } = field
+            const value = this.lead[key]
+            if (field.isEditable) this.updateLead({ key, value })
             this.$store.commit({ type: 'toggleCardInputEditable', sectionId, fieldIdx })
-            if (this.$refs[field.key]) {
-                if (field.isEditable) this.$refs[field.key][0].focus()
-                else this.$refs[field.key][0].blur()
+            if (this.$refs[key]) {
+                if (field.isEditable) this.$refs[key][0].focus()
+                else this.$refs[key][0].blur()
             }
-
-            // if (field.isEditable) {
-            //     if (this.$refs[field.key]) this.$refs[field.key][0].focus()
-            // } else {
-            //     if (this.$refs[field.key]) this.$refs[field.key][0].blur()
-            // }
         },
         saveCardSectionsPrefs() {
-            // const { key } = this.tableFields[colIdx]
             const field = ''
             const prefs = JSON.parse(JSON.stringify(this.userPrefs || {}))
             let cardSections = prefs.cardSections || {}
@@ -184,17 +179,20 @@ export default {
         closeModal() {
             this.currModal = null
         },
-        saveLeadDetails(field) {
-            const { key } = field
-            const value = this.lead[key]
+        updateLead({ key, value }) {
+            this.updateLeadField({ key, value })
             this.$store.dispatch({ type: 'onUpdateLead', lead: this.lead, key, value })
         },
-        addLog(logInfo) {
-            console.log('logInfo: ', logInfo);
-            this.lead.logs.unshift(logInfo)
-            const value = JSON.parse(JSON.stringify(this.lead.logs))
-            this.$store.dispatch({ type: 'onUpdateLead', lead: this.lead, key: 'logs', value })
-        }
+        // addLog(logInfo) {
+        //     console.log('logInfo: ', logInfo);
+        //     this.lead.logs.unshift(logInfo)
+        //     const value = JSON.parse(JSON.stringify(this.lead.logs))
+        //     this.$store.dispatch({ type: 'onUpdateLead', lead: this.lead, key: 'logs', value })
+        // },
+        async saveLog(log) {
+            const lead = await this.$store.dispatch({ type: 'saveLog', leadId: this.lead._id, log })
+            this.lead = lead
+        },
         // openModal(type = '') {
         //     if (!type) return
         //     this.modals[type].isOpen = true
@@ -243,7 +241,8 @@ export default {
     components: {
         datePicker,
         // logModal,
-        DialogModal
+        DialogModal,
+        LogPreview
     },
     watch: {
         '$route.params.id': {
@@ -258,6 +257,19 @@ export default {
             immediate: true,
         },
     },
+    // watch: {
+    //     '$route.params.id': {
+    //         async handler() {
+    //             const { id } = this.$route.params
+    //             if (!id) return
+    //             const lead = await leadService.getLeadById(id)
+    //             console.log('lead: ', lead)
+    //             this.lead = JSON.parse(JSON.stringify(lead))
+    //             // this.lead = lead
+    //         },
+    //         immediate: true,
+    //     },
+    // },
 
 }
 </script>

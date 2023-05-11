@@ -3,6 +3,7 @@ import { userStore } from './modules/user.store'
 import { userPrefsStore } from './modules/user-prefs.store'
 import { contactStore } from './modules/contact.store'
 import { leadStore } from './modules/lead.store'
+import { statisticStore } from './modules/statistic.store'
 
 export const store = createStore({
     strict: true,
@@ -26,5 +27,6 @@ export const store = createStore({
         leadStore,
         userStore,
         userPrefsStore,
+        statisticStore,
     },
 })

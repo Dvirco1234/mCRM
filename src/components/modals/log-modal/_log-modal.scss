@@ -1,4 +1,15 @@
 .dialog-form {
+    grid-auto-rows: max-content;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10px;
+    .field-wrapper {
+        overflow: visible;
+
+        &.full {
+            grid-column: 1 / -1;
+        }
+    }
+
     .field {
         &.desc {
             min-height: 61px !important;

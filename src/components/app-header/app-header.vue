@@ -16,9 +16,9 @@
                 </ul>
             </nav>
             <section class="user-actions flex align-center gap-10">
-                <svgIcon iconType="notifications" className="circle hover lg-bg fill" />
-                <svgIcon iconType="schedule" className="circle hover lg-bg fill" />
-                <svgIcon iconType="user" className="circle lg-icon lg-bg fill" />
+                <svgIcon iconType="notifications" className="pointer circle hover lg-bg fill" />
+                <svgIcon iconType="schedule" className="pointer circle hover lg-bg fill" />
+                <svgIcon iconType="user" className="pointer circle lg-icon lg-bg fill" />
             </section>
         </header>
     </section>

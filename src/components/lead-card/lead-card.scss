@@ -86,34 +86,38 @@
             border: 1px solid $border-light;
             border-radius: 4px;
 
-            label {
-                font-size: em(12px);
-                color: $txt-light-darker1;
-                p {
-                    font-size: em(19px);
-                    color: $txt-dark-darker;
-                }
-            }
+            // label {
+            //     font-size: em(12px);
+            //     color: $txt-light-darker1;
+            //     p {
+            //         font-size: em(19px);
+            //         color: $txt-dark-darker;
+            //     }
+            // }
 
-            .desc {
-                width: 100%;
-                pre {
-                    width: 100%;
-                    white-space:pre-wrap;
-                    font-family: Arimo, sans-serif;
-                    padding: 12px 0;
-                }
-            }
+            // .desc {
+            //     width: 100%;
+            //     pre {
+            //         width: 100%;
+            //         white-space:pre-wrap;
+            //         font-family: Arimo, sans-serif;
+            //         padding: 12px 0;
 
-            .date-by {
-                color: $txt-light-darker1;
-                font-size: em(12px);
+            //         &.editing {
+
+            //         }
+            //     }
+            // }
+
+            // .date-by {
+            //     color: $txt-light-darker1;
+            //     font-size: em(12px);
                 
-                .date {
-                    color: $txt-light-darker;
-                    margin-inline-start: 10px;
-                }
-            }
+            //     .date {
+            //         color: $txt-light-darker;
+            //         margin-inline-start: 10px;
+            //     }
+            // }
         }
     }
 

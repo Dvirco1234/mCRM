@@ -1,22 +1,31 @@
 <template>
-    <form class="dialog-form flex flex-column" @submit.prevent="saveLog()">
-        <label for="type">אמצעי קשר</label>
-        <selectDropdown class="form-field" :options="logOptions.types" v-model="logInfo.type" />
-        <label for="result">תוצאה</label>
-        <selectDropdown class="form-field" :options="logOptions.results" v-model="logInfo.result" />
+    <!-- <form class="dialog-form flex flex-column" @submit.prevent="saveLog()"> -->
+    <form class="dialog-form grid" @submit.prevent="saveLog()">
+        <div class="field-wrapper">
+            <label for="type">אמצעי קשר</label>
+            <selectDropdown class="form-field" :options="logOptions.types" v-model="logInfo.type" />
+        </div>
+        <div class="field-wrapper">
+            <label for="result">תוצאה</label>
+            <selectDropdown class="form-field" :options="logOptions.results" v-model="logInfo.result" />
+        </div>
         <template v-if="logInfo.result === 'followup'">
-            <label for="result">תאריך התקשרות הבא</label>
-            <div class="followup-date field">
-                <datePicker :isEditable="true" :field="{ key: 'nextContactDate', isImmutable: false }" @pickDate="updateLeadField" />
+            <div class="field-wrapper">
+                <label for="result">תאריך התקשרות הבא</label>
+                <div class="followup-date field">
+                    <datePicker :isEditable="true" :field="{ key: 'nextContactDate', isImmutable: false }" @pickDate="updateLeadField" />
+                </div>
             </div>
         </template>
-        <label for="status">סטטוס</label>
-        <selectDropdown class="form-field" :options="statusTxtMapOptions" v-model="logInfo.status" />
-        <div class="desc-wrapper">
+        <div class="field-wrapper">
+            <label for="status">סטטוס</label>
+            <selectDropdown class="form-field" :options="statusTxtMapOptions" v-model="logInfo.status" />
+        </div>
+        <div class="field-wrapper full desc-wrapper">
             <label for="desc">תיאור</label>
             <pre class="form-field field desc" id="desc" contenteditable ref="pre" @blur="onInputDesc">{{ logInfo.description }}</pre>
         </div>
-        <div class="actions flex">
+        <div class="field-wrapper full actions flex">
             <button class="clean-btn btn" @click="closeModal">ביטול</button>
             <button class="clean-btn btn save" type="submit">שמור</button>
         </div>
@@ -76,8 +85,10 @@ export default {
             this.logInfo.manager = this.$store.getters.getLoggedinUser.fullname
             this.logInfo.createdAt = Date.now()
             this.$emit('saveLog', { ...this.logInfo })
+            this.$emit('updateLead', { key: 'status', value: this.logInfo.status })
             this.closeModal()
             this.initLogInfo()
+            this.updateScrum()
         },
         closeModal() {
             // if(this.isMinimized) return
@@ -96,11 +107,16 @@ export default {
         initLogInfo() {
             this.logInfo = {
                 type: this.logType || 'phone',
+                didAnswer: false,
                 // type: this.logType,
                 result: 'phone',
                 status: 'beforeIntro',
                 description: this.logDesc,
             }
+        },
+        updateScrum() {
+            // const manager = 
+
         },
     },
     computed: {

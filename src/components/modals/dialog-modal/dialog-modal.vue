@@ -10,7 +10,7 @@
         <main class="dialog-main">
             <slot></slot>
             <component v-if="modal?.type" :is="modal.type" @closeModal="closeModal" @openModal="openModal" @setLogInfo="setLogInfo" :lead="lead"
-                @saveLog="$emit('saveLog', $event)" :logType="logType" :logDesc="logDesc" />
+                @saveLog="$emit('saveLog', $event)" @updateLead="$emit('updateLead', $event)" :logType="logType" :logDesc="logDesc" />
 
         </main>
     </section>
