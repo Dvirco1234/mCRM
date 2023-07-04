@@ -3,7 +3,7 @@
         <header class="header flex align-center space-between">
             <div class="name flex align-center">
                 <svgIcon iconType="arrowRight" class="svg-btn cursor-pointer" className="circle hover" @click="$router.go(-1)" />
-                <first-letter :word="lead.fullname" :isTwoLetters="true" />
+                <first-letter :word="lead.fullname.trim()" :isTwoLetters="true" />
                 <h2>{{ lead.fullname }}</h2>
             </div>
             <div class="actions flex gap-20 cursor-pointer">
@@ -139,7 +139,7 @@ export default {
     },
     created() {
         // this.lead = JSON.parse(JSON.stringify(this.currLead))
-        this.modals.callModal.label = `התקשרות עם ${this.lead?.fullname}`
+        this.modals.callModal.label = `התקשרות עם ${this.lead?.fullname || 'ליד'}`
     },
     mounted() {
         this.sections = JSON.parse(JSON.stringify(this.cardSections))

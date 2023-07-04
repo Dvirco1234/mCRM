@@ -6,7 +6,7 @@
                     @click="$store.commit({ type: 'toggleMenu' })" />
             </div>
             <div class="curr-view-info flex flex-column">
-                <h3>{{ currView }} <span>({{ leads.length }})</span></h3>
+                <h3>{{ currView }} <span>({{ leads?.length }})</span></h3>
                 <nav class="view-options flex">
                     <router-link class="option-link" v-for="link in viewOpts" :to="link.path"
                         :class="{ 'router-link-active': $route.name === link.name }">{{ link.txt }}</router-link>

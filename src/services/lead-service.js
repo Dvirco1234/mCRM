@@ -2,13 +2,14 @@ import { sheetService } from './sheet-service.js'
 import { utilService } from './util-service.js'
 import { storageService } from './storage-service.js'
 import { userService } from './user.service.js'
+import { httpService } from './http-service.js'
 import { asyncStorageService } from './async-storage.service'
 
 const LEADS_KEY = 'leads_db'
 const CONTACT_KEY = 'contact_db'
 
 export const leadService = {
-    // query,
+    query,
     getLeads,
     saveLead,
     getLeadById,
@@ -29,6 +30,12 @@ export const leadService = {
 
 _createLeads()
 
+async function query(filterBy = null) {
+    let leads = await httpService.get('lead', filterBy)
+    console.log('leads: ', leads);
+    return leads
+}
+
 async function getLeads(filterBy = null) {
     // console.log('filterBy: ', filterBy);
     // let leads = _createLeads()
@@ -40,12 +47,21 @@ async function getLeads(filterBy = null) {
 }
 
 async function getLeadById(id) {
-    return await asyncStorageService.get(LEADS_KEY, id)
+    // return await asyncStorageService.get(LEADS_KEY, id)
+    return await httpService.get(`lead/${id}`)
 }
 
-async function saveLead(lead) {
-    if (lead._id) return await asyncStorageService.put(LEADS_KEY, lead)
+// async function saveLead(lead) {
+//     if (lead._id) return await asyncStorageService.put(LEADS_KEY, lead)
+//     else return await asyncStorageService.post(LEADS_KEY, lead)
+// }
+async function saveLead(lead, key, value) {
+    if (lead._id) return await _updateLead(lead._id, key, value)
     else return await asyncStorageService.post(LEADS_KEY, lead)
+}
+
+async function _updateLead(id, key, value) {
+    return await httpService.put(`lead/by-key/${id}`, { key, value })
 }
 
 async function saveLog(leadId, log) {
@@ -71,107 +87,6 @@ function getContacts(userId) {
     // return storageService.getContacts(CONTACT_KEY)
     // return sheetService.getContacts(userId)
 }
-
-function setStage() {
-    console.log('stage')
-}
-
-async function postContact(payload) {
-    var formData = { name: 'ghj', phone: '678678', email: 'gyjgfgj@dfhg.com' }
-    var data = new URLSearchParams()
-    for (var key in formData) {
-        data.append(key, formData[key])
-    }
-    const res = await fetch('https://eu-west-1.aws.data.mongodb-api.com/app/sheetstomongodb-sulid/endpoint/sheets', {
-        method: 'POST',
-        body: data,
-    })
-    const id = await res.json()
-    console.log('id: ', id)
-}
-
-async function getFromMongo() {
-    const findEndpoint = 'https://data.mongodb-api.com/app/data-ghtax/endpoint/data/v1/action/find'
-    const clusterName = 'SheetsCluster'
-    const partname = ''
-
-    const apiKey = 'Nm8A0uhf898Wn4tQe03iGDbHStBVje6kB3ASWABm3Ftth6aS6MBUrXZ0VqAHPcRc'
-    //  const apiKey = import.meta.env.VITE_MONGODB_API_KEY
-    // console.log('apiKey: ', apiKey);
-
-    //We can do operators like regular expression with the Data API
-    const query = { name: { $regex: `${partname}`, $options: 'i' } }
-    const order = { name: 1 }
-    const limit = 100
-    //We can Specify sort, limit and a projection here if we want
-    const payload = {
-        filter: query,
-        sort: order,
-        limit,
-        collection: 'contact_db',
-        database: 'googlesheetsdb',
-        dataSource: clusterName,
-    }
-
-    const options = {
-        method: 'POST',
-        // contentType: 'application/json',
-        body: JSON.stringify(payload),
-        headers: { 'api-key': apiKey, 'Content-type': 'application/json' },
-    }
-
-    const res = await fetch(findEndpoint, options)
-    console.log('res: ', res.json())
-    // console.log(JSON.parse(res.getContentText()).documents)
-    // const documents = JSON.parse(res.getContentText()).documents
-
-    // for (d = 1; d <= documents.length; d++) {
-    //     let doc = documents[d - 1]
-    //     fields = [[doc.name, doc.phone, doc.email]]
-    //     let row = d + 2
-    //     sheet.getRange(`C${row}:E${row}`).setValues(fields)
-    // }
-}
-
-function getMyContacts(userId) {
-    const leads = storageService.getLeads(LEADS_KEY)
-    let contacts = leads.filter(lead => lead.ownerId === userId)
-    contacts.map(contact => {
-        // gContacts.stages[contact.status].children.push(contact)
-        const currStage = gContacts.stages.filter(stage => stage.status === contact.status)
-        currStage.push(contact)
-    })
-}
-// function mongoTry() {
-//     var axios = require('axios')
-//     var data = JSON.stringify({
-//         collection: 'contact_db',
-//         database: 'googlesheetsdb',
-//         dataSource: 'SheetsCluster',
-//         projection: {
-//             _id: 1,
-//         },
-//     })
-
-//     var config = {
-//         method: 'post',
-//         url: 'https://data.mongodb-api.com/app/data-ghtax/endpoint/data/v1/action/findOne',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Access-Control-Request-Headers': '*',
-//             'api-key': 'Nm8A0uhf898Wn4tQe03iGDbHStBVje6kB3ASWABm3Ftth6aS6MBUrXZ0VqAHPcRc',
-//         },
-//         data: data,
-//     }
-
-//     axios(config)
-//         .then(function (response) {
-//             console.log(JSON.stringify(response.data))
-//         })
-//         .catch(function (error) {
-//             console.log(error)
-//         })
-// }
 
 function getTableFields() {
     const userPrefs = userService.getUserPrefs()
@@ -213,19 +128,6 @@ function getBoardFields() {
     ]
 }
 
-// function setTableFields(fields) {
-//     let userPrefs = userService.getUserPrefs()
-//     if (!userPrefs) userPrefs = {}
-//     userPrefs.tableFields = fields //.map(field => field.isActive?)
-//     userService.saveUserPrefs(userPrefs)
-// }
-// function setUserPrefFields(fields) {
-//     let userPrefs = userService.getUserPrefs()
-//     if (!userPrefs) userPrefs = {}
-//     userPrefs.tableFields = fields //.map(field => field.isActive?)
-//     userService.saveUserPrefs(userPrefs)
-// }
-
 function getLeadCardSections() {
     const userPrefs = userService.getUserPrefs()
     if (userPrefs?.cardSections) return userPrefs.cardSections
@@ -237,8 +139,8 @@ function getLeadCardSections() {
             fields: [
                 { key: 'status', txt: 'סטטוס', isActive: true, isEditable: false, type: 'select' },
                 { key: 'fullname', txt: 'שם מלא', isActive: true, isEditable: false },
-                { key: 'firstName', txt: 'שם פרטי', isActive: true, isEditable: false },
-                { key: 'lastName', txt: 'שם משפחה', isActive: true, isEditable: false },
+                { key: 'firstName', txt: 'שם פרטי', isActive: false, isEditable: false },
+                { key: 'lastName', txt: 'שם משפחה', isActive: false, isEditable: false },
                 { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone' },
                 { key: 'createdAt', txt: 'תאריך כניסה', isActive: true, isEditable: false, type: 'date', isImmutable: true },
                 { key: 'source', txt: 'מקור', isActive: true, isEditable: false },
@@ -252,7 +154,7 @@ function getLeadCardSections() {
             fields: [
                 { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone' },
                 { key: 'email', txt: 'אימייל', isActive: true, isEditable: false, type: 'email' },
-                { key: 'manager', txt: 'מנהל לקוח', isActive: true },
+                { key: 'manager', txt: 'מנהל לקוח', isActive: false },
                 // { key: 'leadManager', txt: 'מנהל לקוח', isActive: true },
                 { key: 'message', txt: 'הודעה', isActive: true, isEditable: false },
                 // { key: 'contactLog', txt: 'לוג שיחה', isActive: true, isEditable: false },

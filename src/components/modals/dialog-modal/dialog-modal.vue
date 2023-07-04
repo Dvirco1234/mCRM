@@ -29,7 +29,7 @@ export default {
         modal: { type: Object },
         lead: { type: Object, default: null },
     },
-
+    
     data() {
         return {
             isMinimized: false,
@@ -37,7 +37,10 @@ export default {
             logDesc: '',
         }
     },
-    created() { },
+    created() { 
+        // console.log('lead: ', lead);
+
+    },
     methods: {
         // saveLog() {
         //     this.logInfo.description = this.$refs.pre.innerText

@@ -89,16 +89,14 @@ export const leadStore = {
         //     console.log('lead: ', lead)
         // },
         updateLead(state, { updatedLead, key, value }) {
-            // const idx = state.leads.findIndex(l => l._id === updatedLead._id)
-            // state.leads[idx][key] = value
-            // state.leads.splice(idx, 1, updatedLead)
             const lead = state.leads.find(l => l._id === updatedLead._id)
             lead[key] = value
         },
     },
     actions: {
         async loadLeads({ commit, state: { filterBy } }) {
-            const leads = await leadService.getLeads(filterBy)
+            // const leads = await leadService.getLeads(filterBy)
+            const leads = await leadService.query(filterBy)
             commit({ type: 'setLeads', leads })
         },
         async loadNewLeads(store) {
@@ -115,7 +113,7 @@ export const leadStore = {
         async onUpdateLead({ commit }, { lead, key, value }) {
             const leadToUpdate = JSON.parse(JSON.stringify(lead))
             leadToUpdate[key] = value
-            const updatedLead = await leadService.saveLead(leadToUpdate)
+            const updatedLead = await leadService.saveLead(leadToUpdate, key, value)
             commit({ type: 'updateLead', updatedLead, key, value })
             return updatedLead
         },
