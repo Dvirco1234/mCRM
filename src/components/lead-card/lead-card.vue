@@ -32,7 +32,9 @@
                                 @pickDate="updateLeadField" :class="{ 'cursor-default': field.isImmutable }" />
                             <!-- <p v-else-if="field.type === 'select'">{{ statusTxtMap[lead[field.key]] }}</p> -->
                             <p v-else-if="field.key === 'status' && !field.isEditable" class="input-p">{{ statusTxtMap[lead[field.key]] }}</p>
-                            <selectDropdown v-else-if="field.type === 'select'" class="input" :options="statusTxtMapOptions"
+                            <!-- <selectDropdown v-else-if="field.type === 'select'" class="input" :options="statusTxtMapOptions"
+                                :isEditable="field.isEditable" v-model="lead[field.key]" /> -->
+                            <VSelect v-else-if="field.type === 'select'" class="input" :options="statusTxtMapOptions"
                                 :isEditable="field.isEditable" v-model="lead[field.key]" />
                             <input v-else :ref="field.key" :id="field.key" class="input" :readonly="!field.isEditable"
                                 v-model="lead[field.key]" />

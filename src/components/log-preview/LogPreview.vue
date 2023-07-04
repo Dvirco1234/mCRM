@@ -2,7 +2,7 @@
     <article>
         <header class="flex space-between align-center">
             <h4 class="flex align-center gap-4">
-                <svgIcon :iconType="log.type" isSmall className="circle md-bg" :class="log.type" />לוג שיחה
+                <svgIcon :iconType="log.type || 'phone'" isSmall className="circle md-bg" :class="log.type || 'phone'" />לוג שיחה
             </h4>
             <div class="flex gap-20">
                 <label>

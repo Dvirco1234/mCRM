@@ -102,3 +102,10 @@ a:hover {
         opacity: 0.87;
     }
 }
+
+article.select-wrapper.input {
+    margin: 0;
+}
+article.select-wrapper .options-wrapper .options .option.curr-option {
+    outline: 1px solid #005faa24;
+}

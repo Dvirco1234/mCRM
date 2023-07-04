@@ -10,6 +10,8 @@ import firstLetter from './components/utils/first-letter.vue'
 import selectDropdown from './components/utils/select-dropdown.vue'
 import '@vuepic/vue-datepicker/dist/main.css'
 
+import { VForm, VInput, VSelect } from 'validation-vue'
+
 import { clickOutsideDirective, columnsResizableDirective } from './directives'
 import formatTime from './filters'
 
@@ -37,6 +39,9 @@ app.component('Datepicker', Datepicker)
 app.component('svgIcon', svgIcon)
 app.component('firstLetter', firstLetter)
 app.component('selectDropdown', selectDropdown)
+app.component('VSelect', VSelect)
+app.component('VInput', VInput)
+app.component('VForm', VForm)
 
 app.use(router)
 app.use(store)

@@ -30,6 +30,7 @@ export const leadStore = {
         getBoardScene({ leads }, { getActiveBoardFields }) {
             const idxMap = getActiveBoardFields.reduce((acc, field, idx) => ({ ...acc, [field.key]: idx }), {})
             let scene = JSON.parse(JSON.stringify(getActiveBoardFields))
+            console.log('scene: ', scene);
             leads.map(lead => {
                 const stageIdx = idxMap[lead.status]
                 scene[stageIdx].children.push(lead)
@@ -89,7 +90,12 @@ export const leadStore = {
         //     console.log('lead: ', lead)
         // },
         updateLead(state, { updatedLead, key, value }) {
+            console.log('updatedLead: ', updatedLead);
+            console.log('key: ', key);
+            console.log('value: ', value);
+            console.log('state.leads: ', state.leads);
             const lead = state.leads.find(l => l._id === updatedLead._id)
+            console.log('lead: ', lead);
             lead[key] = value
         },
     },

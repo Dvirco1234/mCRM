@@ -10,7 +10,7 @@
             </article>
             <div class="actions flex">
                 <button class="clean-btn btn" @click="closeModal">ביטול</button>
-                <button class="clean-btn btn save" @click="openLogModal">מעבר ללוג שיחה</button>
+                <button class="clean-btn btn save" @click.stop="openLogModal">מעבר ללוג שיחה</button>
             </div>
         </main>
         <!-- <button @click="closeModalOpenLog">מעבר ללוג שיחה</button> -->

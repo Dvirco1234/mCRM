@@ -1,13 +1,14 @@
 <template>
     <!-- <form class="dialog-form flex flex-column" @submit.prevent="saveLog()"> -->
-    <form class="dialog-form grid" @submit.prevent="saveLog()">
-        <div class="field-wrapper">
+    <form class="dialog-form flex flex-column" @submit.prevent="saveLog()">
+        <main class="grid">
+            <div class="field-wrapper">
             <label for="type">אמצעי קשר</label>
-            <selectDropdown class="form-field" :options="logOptions.types" v-model="logInfo.type" />
+            <VSelect class="form-field" :options="logOptions.types" v-model="logInfo.type" />
         </div>
         <div class="field-wrapper">
             <label for="result">תוצאה</label>
-            <selectDropdown class="form-field" :options="logOptions.results" v-model="logInfo.result" />
+            <VSelect class="form-field" :options="logOptions.results" v-model="logInfo.result" />
         </div>
         <template v-if="logInfo.result === 'followup'">
             <div class="field-wrapper">
@@ -19,12 +20,13 @@
         </template>
         <div class="field-wrapper">
             <label for="status">סטטוס</label>
-            <selectDropdown class="form-field" :options="statusTxtMapOptions" v-model="logInfo.status" />
+            <VSelect class="form-field" :options="statusTxtMapOptions" v-model="logInfo.status" />
         </div>
         <div class="field-wrapper full desc-wrapper">
             <label for="desc">תיאור</label>
             <pre class="form-field field desc" id="desc" contenteditable ref="pre" @blur="onInputDesc">{{ logInfo.description }}</pre>
         </div>
+        </main>
         <div class="field-wrapper full actions flex">
             <button class="clean-btn btn" @click="closeModal">ביטול</button>
             <button class="clean-btn btn save" type="submit">שמור</button>

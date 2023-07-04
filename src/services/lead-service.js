@@ -56,11 +56,15 @@ async function getLeadById(id) {
 //     else return await asyncStorageService.post(LEADS_KEY, lead)
 // }
 async function saveLead(lead, key, value) {
-    if (lead._id) return await _updateLead(lead._id, key, value)
+    if (lead._id) return await _updateLeadByKey(lead._id, key, value)
     else return await asyncStorageService.post(LEADS_KEY, lead)
 }
 
-async function _updateLead(id, key, value) {
+async function updateLead(lead) {
+    return await httpService.put(`lead/${id}`, lead)
+}
+
+async function _updateLeadByKey(id, key, value) {
     return await httpService.put(`lead/by-key/${id}`, { key, value })
 }
 
@@ -73,7 +77,11 @@ async function saveLog(leadId, log) {
         log.id = utilService.makeId()
         lead.logs.unshift(log)
     }
-    return await saveLead(lead)
+    const logStr = `${new Date(log.createdAt).toLocaleDateString('en-GB')} - ${log.manager} - ${log.description} - ${log.type} - ${log.status} - ${log.result}`
+    lead.contactLog = logStr + '\n' + lead.contactLog
+
+    // return await saveLead(lead, 'contactLog', lead.contactLog)
+    return await updateLead(lead)
 }
 
 function getNewLeads() {

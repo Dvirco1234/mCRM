@@ -32,7 +32,7 @@ export default {
                 (75 + 10 * Math.random()) + '%)'
         },
         letterSize() {
-            return {width: `${this.size}px`, height: `${this.size}px`, 'font-size': `${this.size / 2}px`}
+            return {width: `${this.size}px`,'min-width': `${this.size}px`, height: `${this.size}px`, 'font-size': `${this.size / 2}px`}
         }
     },
     watch: {

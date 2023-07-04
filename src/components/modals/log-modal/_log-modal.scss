@@ -1,7 +1,13 @@
 .dialog-form {
-    grid-auto-rows: max-content;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 10px;
+    
+    main {
+        grid-auto-rows: max-content;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 10px;
+        flex: 1;
+        overflow: visible;
+    }
+
     .field-wrapper {
         overflow: visible;
 
@@ -13,7 +19,7 @@
     .field {
         &.desc {
             min-height: 61px !important;
-            max-height: 83%;
+            max-height: 60%;
             overflow-y: auto;
 
             &:focus {
