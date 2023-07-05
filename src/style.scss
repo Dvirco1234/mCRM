@@ -13,17 +13,17 @@
 @import './views/lead-app/lead-app.scss';
 
 // COMPONENTS
-@import './components/app-header/app-header.scss';
-@import './components/sub-header/sub-header.scss';
-@import './components/funnel-board/funnel-board.scss';
-@import './components/funnel-column/funnel-column.scss';
-@import './components/lead-board/lead-board.scss';
-@import './components/lead-filter/lead-filter.scss';
-@import './components/lead-list/lead-list.scss';
-@import './components/lead-preview/lead-preview.scss';
-@import './components/lead-card/lead-card.scss';
-@import './components/filter-list/filter-list.scss';
-@import './components/table-fields-modal/table-fields-modal.scss';
+@import './components/app-header/app-header';
+@import './components/sub-header/sub-header';
+// @import './components/funnel-board/funnel-board.scss';
+// @import './components/funnel-column/funnel-column.scss';
+@import './components/lead-board/lead-board';
+@import './components/lead-filter/lead-filter';
+@import './components/lead-list/lead-list';
+@import './components/lead-preview/lead-preview';
+@import './components/lead-card/lead-card';
+@import './components/filter-list/filter-list';
+@import './components/table-fields-modal/table-fields-modal';
 @import './components/log-preview/LogPreview';
 
 @import './components/modals/call-modal/call-modal';
@@ -33,4 +33,4 @@
 @import './components/modals/email-modal/email-modal';
 
 // UTILS
-@import './components/utils/date-picker/date-picker.scss';
+@import './components/utils/date-picker/date-picker';
