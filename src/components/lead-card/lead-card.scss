@@ -124,7 +124,7 @@
     .lead-details {
         .card-section {
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-
+            overflow: visible;
             // & > * {
             // padding: 10px 4px;
             // }
@@ -153,6 +153,9 @@
                         cursor: pointer;
                         outline: none;
                         padding: 0;
+                        &:focus {
+                            outline: none;
+                        }
                     }
                     .icon {
                         opacity: 0;

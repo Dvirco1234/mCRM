@@ -1,4 +1,5 @@
 import { leadService } from '../../services/lead-service.js'
+import { settingsService } from '../../services/settings-service.js'
 import { userService } from '../../services/user.service'
 
 export const userPrefsStore = {
@@ -22,6 +23,7 @@ export const userPrefsStore = {
             future: 'אולי בעתיד',
             close: 'סגור',
         },
+        datalists: null,
     },
     getters: {
         getUserPrefs(state) {
@@ -37,7 +39,11 @@ export const userPrefsStore = {
             return boardFields.filter(field => field.isActive)
         },
         getLeadCardSections({ cardSections }) {
-            return cardSections
+            // return cardSections
+            return cardSections.map(s => {
+                const fields = s.fields.filter(f => f.isActive)
+                return { ...s, fields }
+            })
         },
         getCurrFilterViews({ currFilterViews }) {
             return currFilterViews
@@ -47,6 +53,9 @@ export const userPrefsStore = {
         },
         getStatusTxtMap({ statusTxtMap }) { 
             return statusTxtMap
+        },
+        getDatalists({ datalists }) { 
+            return datalists
         },
     },
     mutations: {
@@ -71,6 +80,9 @@ export const userPrefsStore = {
         getLeadCardSections(state) {
             state.cardSections = leadService.getLeadCardSections()
         },
+        setDatalists(state, { datalists }) {
+            state.datalists = datalists
+        },
         toggleCardSectionOpen(state, { sectionId }) {
             const idx = state.cardSections.findIndex(s => s.id === sectionId)
             state.cardSections[idx].isOpen = !state.cardSections[idx].isOpen
@@ -80,9 +92,16 @@ export const userPrefsStore = {
                 value: JSON.parse(JSON.stringify(state.cardSections)),
             })
         },
-        toggleCardInputEditable(state, { sectionId, fieldIdx }) {
-            const idx = state.cardSections.findIndex(s => s.id === sectionId)
-            state.cardSections[idx].fields[fieldIdx].isEditable = !state.cardSections[idx].fields[fieldIdx].isEditable
+        // toggleCardInputEditable(state, { sectionId, fieldIdx }) {
+        //     const idx = state.cardSections.findIndex(s => s.id === sectionId)
+        //     state.cardSections[idx].fields[fieldIdx].isEditable = !state.cardSections[idx].fields[fieldIdx].isEditable
+        // },
+        toggleCardInputEditable(state, { sectionId, fieldKey }) {
+            const secIdx = state.cardSections.findIndex(s => s.id === sectionId)
+            const field = state.cardSections[secIdx].fields.find(f => f.key === fieldKey)
+            field.isEditable = !field.isEditable
+            // const fieldIdx = state.cardSections[secIdx].fields.findIndex(f => f.key === fieldKey)
+            // state.cardSections[secIdx].fields[fieldIdx].isEditable = !state.cardSections[secIdx].fields[fieldIdx].isEditable
         },
         getCurrFilterViews(state, { view }) {
             const filterViews = leadService.getCurrFilterViews(view)
@@ -132,5 +151,10 @@ export const userPrefsStore = {
 
         // },
     },
-    actions: {},
+    actions: {
+        async getDatalists({ commit }) {
+            const datalists = await settingsService.getDatalists()
+            commit({ type: 'setDatalists', datalists })
+        },
+    },
 }

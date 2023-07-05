@@ -21,23 +21,26 @@
                         <svgIcon iconType="expandDown" :className="section.isOpen ? 'fill-secondary' : 'rotate-270 fill-secondary'" />
                         <h3>{{ section.name }}</h3>
                     </div>
+                    <!-- <pre>{{ section }}</pre> -->
                     <form v-if="section.isOpen" class="form-field flex" v-for="(field, idx) in section.fields" :key="field.key"
-                        @submit.prevent="toggleInputEditable(section.id, idx, field)">
+                        @submit.prevent="toggleInputEditable(section.id, field, idx)">
                         <div class="flex field-wrapper" :class="{ disabled: !field.isEditable, 'cursor-default': field.isImmutable }"
-                            @click.stop="!field.isEditable && !field.isImmutable && toggleInputEditable(section.id, idx, field)">
+                            @click.stop="!field.isEditable && !field.isImmutable && toggleInputEditable(section.id, field, idx)">
                             <label :for="field.key" class="label">{{ field.txt }}</label>
                             <p v-if="field.type === 'phone' && !field.isEditable || field.type === 'email' && !field.isEditable"
                                 class="phone-email input-p" @click.stop="openDialog(field)">{{ lead[field.key] }}</p>
                             <date-picker v-else-if="field.type === 'date'" :date="lead[field.key]" :isEditable="field.isEditable" :field="field"
                                 @pickDate="updateLeadField" :class="{ 'cursor-default': field.isImmutable }" />
                             <!-- <p v-else-if="field.type === 'select'">{{ statusTxtMap[lead[field.key]] }}</p> -->
-                            <p v-else-if="field.key === 'status' && !field.isEditable" class="input-p">{{ statusTxtMap[lead[field.key]] }}</p>
+                            <!-- <p v-else-if="field.key === 'status' && !field.isEditable" class="input-p">{{ statusTxtMap[lead[field.key]] }}</p> -->
                             <!-- <selectDropdown v-else-if="field.type === 'select'" class="input" :options="statusTxtMapOptions"
                                 :isEditable="field.isEditable" v-model="lead[field.key]" /> -->
-                            <VSelect v-else-if="field.type === 'select'" class="input" :options="statusTxtMapOptions"
-                                :isEditable="field.isEditable" v-model="lead[field.key]" />
+                            <!-- <VSelect v-else-if="field.type === 'select' && field.key === 'status'" class="input" :options="statusTxtMapOptions"
+                                :isEditable="field.isEditable" v-model="lead[field.key]" /> -->
+                            <VSelect v-else-if="field.type === 'select' && field.isEditable" class="input" :options="datalists[field.key]"
+                                :isEditable="field.isEditable" v-model="lead[field.key]" :isSearch="false"/>
                             <input v-else :ref="field.key" :id="field.key" class="input" :readonly="!field.isEditable"
-                                v-model="lead[field.key]" />
+                                v-model="lead[field.key]" :class="{ 'cursor-default': field.isImmutable }"/>
                             <button v-show="field.isEditable" class="clean-btn icon flex-center" type="submit">
                                 <svgIcon iconType="done" />
                                 <!-- <svgIcon :iconType="field.isEditable? 'done': 'edit'" /> -->
@@ -142,6 +145,7 @@ export default {
     created() {
         // this.lead = JSON.parse(JSON.stringify(this.currLead))
         this.modals.callModal.label = `התקשרות עם ${this.lead?.fullname || 'ליד'}`
+        console.log('this.$store.getters.getDatalists: ', this.$store.getters.getDatalists);
     },
     mounted() {
         this.sections = JSON.parse(JSON.stringify(this.cardSections))
@@ -150,11 +154,11 @@ export default {
         toggleSectionOpen(sectionId) {
             this.$store.commit({ type: 'toggleCardSectionOpen', sectionId })
         },
-        toggleInputEditable(sectionId, fieldIdx, field) {
+        toggleInputEditable(sectionId, field, fieldIdx) {
             const { key } = field
             const value = this.lead[key]
             if (field.isEditable) this.updateLead({ key, value })
-            this.$store.commit({ type: 'toggleCardInputEditable', sectionId, fieldIdx })
+            this.$store.commit({ type: 'toggleCardInputEditable', sectionId, fieldKey: field.key })
             if (this.$refs[key]) {
                 if (field.isEditable) this.$refs[key][0].focus()
                 else this.$refs[key][0].blur()
@@ -232,6 +236,9 @@ export default {
                 statusMap.push({ key, label: this.statusTxtMap[key] })
             }
             return statusMap
+        },
+        datalists() {
+            return this.$store.getters.getDatalists
         },
         // getColor() {
         //     return "hsl(" + 360 * Math.random() + ',' +

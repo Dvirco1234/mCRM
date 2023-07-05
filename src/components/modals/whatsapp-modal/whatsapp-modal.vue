@@ -2,7 +2,7 @@
     <section>
         <form class="dialog-form flex flex-column" @submit.prevent="sendMsg()">
             <label for="type">הודעה מתבנית</label>
-            <selectDropdown class="form-field" :options="msgTypes" v-model="currMsg" />
+            <VSelect class="form-field" :options="msgTypes" v-model="currMsg" />
             <!-- <label for="result">תוצאה</label>
         <selectDropdown class="form-field" :options="logOptions.results" v-model="logInfo.result" />
         <template v-if="logInfo.result === 'followup'">

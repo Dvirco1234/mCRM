@@ -17,7 +17,7 @@
                     <td class="table-cell " v-for="field in tableFields" :key="field.txt">
                         <!-- <span v-if="field.key === 'createdAt'">{{ $filters.formatTime(lead[field.key]) }}</span> -->
                         <span v-if="field.isDate">{{ $filters.formatTime(lead[field.key], (field.key === 'nextContactDate')) }}</span>
-                        <span v-else-if="field.key === 'status'">{{ statusTxtMap[lead[field.key]] }}</span>
+                        <!-- <span v-else-if="field.key === 'status'">{{ statusTxtMap[lead[field.key]] }}</span> -->
                         <span v-else>{{ lead[field.key] }}</span>
                     </td>
                     <!-- <td class="table-cell " v-for="field in tableFields" :key="field.txt">{{

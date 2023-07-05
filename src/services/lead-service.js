@@ -61,7 +61,7 @@ async function saveLead(lead, key, value) {
 }
 
 async function updateLead(lead) {
-    return await httpService.put(`lead/${id}`, lead)
+    return await httpService.put(`lead/${lead._id}`, lead)
 }
 
 async function _updateLeadByKey(id, key, value) {
@@ -80,8 +80,8 @@ async function saveLog(leadId, log) {
     const logStr = `${new Date(log.createdAt).toLocaleDateString('en-GB')} - ${log.manager} - ${log.description} - ${log.type} - ${log.status} - ${log.result}`
     lead.contactLog = logStr + '\n' + lead.contactLog
 
-    // return await saveLead(lead, 'contactLog', lead.contactLog)
-    return await updateLead(lead)
+    return await saveLead(lead, 'contactLog', lead.contactLog)
+    // return await updateLead(lead)
 }
 
 function getNewLeads() {
@@ -145,11 +145,12 @@ function getLeadCardSections() {
             name: 'פרטים כלליים',
             isOpen: true,
             fields: [
-                { key: 'status', txt: 'סטטוס', isActive: true, isEditable: false, type: 'select' },
+                // { key: 'status', txt: 'סטטוס', isActive: true, isEditable: false, type: 'select' },
+                { key: 'status', txt: 'סטטוס', isActive: true, isEditable: false, isImmutable: true },
                 { key: 'fullname', txt: 'שם מלא', isActive: true, isEditable: false },
                 { key: 'firstName', txt: 'שם פרטי', isActive: false, isEditable: false },
                 { key: 'lastName', txt: 'שם משפחה', isActive: false, isEditable: false },
-                { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone' },
+                // { key: 'phone', txt: 'טלפון', isActive: true, isEditable: false, type: 'phone' },
                 { key: 'createdAt', txt: 'תאריך כניסה', isActive: true, isEditable: false, type: 'date', isImmutable: true },
                 { key: 'source', txt: 'מקור', isActive: true, isEditable: false },
                 { key: 'channel', txt: "צ'אנל", isActive: true, isEditable: false },
@@ -164,13 +165,17 @@ function getLeadCardSections() {
                 { key: 'email', txt: 'אימייל', isActive: true, isEditable: false, type: 'email' },
                 { key: 'manager', txt: 'מנהל לקוח', isActive: false },
                 // { key: 'leadManager', txt: 'מנהל לקוח', isActive: true },
-                { key: 'message', txt: 'הודעה', isActive: true, isEditable: false },
+                { key: 'message', txt: 'הודעה', isActive: false, isEditable: false },
                 // { key: 'contactLog', txt: 'לוג שיחה', isActive: true, isEditable: false },
-                { key: 'blocker', txt: 'חסם פוטנציאלי', isActive: true, isEditable: false },
-                { key: 'lastContactMethod', txt: 'אמצעי קשר אחרון', isActive: true, isEditable: false },
+                { key: 'beforeIntroStatus', txt: 'סטטוס לפני ערב פתוח', isActive: true, isEditable: false, type: 'select' },
+                { key: 'blocker', txt: 'חסם פוטנציאלי', isActive: true, isEditable: false, type: 'select' },
+                { key: 'afterIntroStatus', txt: 'סטטוס אחרי ערב פתוח', isActive: true, isEditable: false, type: 'select' },
+                { key: 'registrationStatus', txt: 'סטטוס הרשמה', isActive: true, isEditable: false, type: 'select' },
+                { key: 'lastContactMethod', txt: 'אמצעי קשר אחרון', isActive: true, isEditable: false, type: 'select' },
                 { key: 'lastContactBy', txt: 'מי תקשר אחרון', isActive: true, isEditable: false },
                 { key: 'lastContactAt', txt: 'תאריך תקשורת אחרון', isActive: true, isEditable: false, type: 'date' },
                 { key: 'nextContactDate', txt: 'תאריך התקשרות הבא', isActive: true, isEditable: false, type: 'date' },
+                { key: 'nextContactTime', txt: 'זמן התקשרות הבא', isActive: true, isEditable: false },
             ],
         },
     ]
